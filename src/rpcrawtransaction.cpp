@@ -360,8 +360,8 @@ Value signrawtransaction(const Array& params, bool fHelp)
             "this transaction depends on but may not yet be in the blockchain.\n"
             "Third optional argument (may be null) is an array of base58-encoded private\n"
             "keys that, if given, will be the only keys used to sign the transaction.\n"
-            "Fourth optional argument is a string that is one of six values; ALL, NONE, SINGLE or\n"
-            "ALL|ANYONECANPAY, NONE|ANYONECANPAY, SINGLE|ANYONECANPAY.\n"
+            "Fourth optional argument is a string beginning with one of three values; ALL, NONE, SINGLE, optionally\n"
+            "combined using | with one or both of FORKID and ANYONECANPAY.\n"
             "Returns json object with keys:\n"
             "  hex : raw transaction with signature(s) (hex-encoded string)\n"
             "  complete : 1 if transaction has a complete set of signature (0 if not)"
@@ -497,17 +497,23 @@ Value signrawtransaction(const Array& params, bool fHelp)
 
     const CKeyStore& keystore = (fGivenKeys ? tempKeystore : *pwalletMain);
 
-    int nHashType = SIGHASH_ALL;
+    int nHashType = SIGHASH_ALL|SIGHASH_FORKID;
     if (params.size() > 3 && params[3].type() != null_type)
     {
         static map<string, int> mapSigHashValues =
             boost::assign::map_list_of
-            (string("ALL"), int(SIGHASH_ALL))
-            (string("ALL|ANYONECANPAY"), int(SIGHASH_ALL|SIGHASH_ANYONECANPAY))
-            (string("NONE"), int(SIGHASH_NONE))
-            (string("NONE|ANYONECANPAY"), int(SIGHASH_NONE|SIGHASH_ANYONECANPAY))
-            (string("SINGLE"), int(SIGHASH_SINGLE))
-            (string("SINGLE|ANYONECANPAY"), int(SIGHASH_SINGLE|SIGHASH_ANYONECANPAY))
+            (string("ALL"),                        int(SIGHASH_ALL))
+            (string("ALL|FORKID"),                 int(SIGHASH_ALL|SIGHASH_FORKID))
+            (string("ALL|FORKID|ANYONECANPAY"),    int(SIGHASH_ALL|SIGHASH_FORKID|SIGHASH_ANYONECANPAY))
+            (string("ALL|ANYONECANPAY"),           int(SIGHASH_ALL|SIGHASH_ANYONECANPAY))
+            (string("NONE"),                       int(SIGHASH_NONE))
+            (string("NONE|FORKID"),                int(SIGHASH_NONE|SIGHASH_FORKID))
+            (string("NONE|FORKID|ANYONECANPAY"),   int(SIGHASH_NONE|SIGHASH_FORKID|SIGHASH_ANYONECANPAY))
+            (string("NONE|ANYONECANPAY"),          int(SIGHASH_NONE|SIGHASH_ANYONECANPAY))
+            (string("SINGLE"),                     int(SIGHASH_SINGLE))
+            (string("SINGLE|FORKID"),              int(SIGHASH_SINGLE|SIGHASH_FORKID))
+            (string("SINGLE|FORKID|ANYONECANPAY"), int(SIGHASH_SINGLE|SIGHASH_FORKID|SIGHASH_ANYONECANPAY))
+            (string("SINGLE|ANYONECANPAY"),        int(SIGHASH_SINGLE|SIGHASH_ANYONECANPAY))
             ;
         string strHashType = params[3].get_str();
         if (mapSigHashValues.count(strHashType))
@@ -516,7 +522,7 @@ Value signrawtransaction(const Array& params, bool fHelp)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid sighash param");
     };
 
-    bool fHashSingle = ((nHashType & ~SIGHASH_ANYONECANPAY) == SIGHASH_SINGLE);
+    bool fHashSingle = ((nHashType & ~(SIGHASH_ANYONECANPAY | SIGHASH_FORKID)) == SIGHASH_SINGLE);
 
     // Sign what we can:
     for (unsigned int i = 0; i < mergedTx.vin.size(); i++)

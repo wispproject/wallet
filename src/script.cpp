@@ -335,7 +335,7 @@ bool static IsDefinedHashtypeSignature(const valtype &vchSig) {
     if (vchSig.size() == 0) {
         return false;
     }
-    unsigned char nHashType = vchSig[vchSig.size() - 1] & (~(SIGHASH_ANYONECANPAY));
+    unsigned char nHashType = vchSig[vchSig.size() - 1] & (~(SIGHASH_ANYONECANPAY | SIGHASH_FORKID));
     if (nHashType < SIGHASH_ALL || nHashType > SIGHASH_SINGLE)
         return error("Non-canonical signature: unknown hashtype byte");
 
@@ -345,14 +345,26 @@ bool static IsDefinedHashtypeSignature(const valtype &vchSig) {
 bool static CheckSignatureEncoding(const valtype &vchSig, unsigned int flags) {
     // Empty signature. Not strictly DER encoded, but allowed to provide a
     // compact way to provide an invalid signature for use with CHECK(MULTI)SIG
-    if ((flags & SCRIPT_VERIFY_ALLOW_EMPTY_SIG) && vchSig.size() == 0) {
+    if ((flags & SCRIPT_VERIFY_ALLOW_EMPTY_SIG) && vchSig.size() == 0)
         return true;
-    }
-    if (!IsLowDERSignature(vchSig)) {
+    if (!IsLowDERSignature(vchSig))
         return false;
-    } else if (!(flags & SCRIPT_VERIFY_FIX_HASHTYPE) && !IsDefinedHashtypeSignature(vchSig)) {
+    else if (!(flags & SCRIPT_VERIFY_FIX_HASHTYPE) && !IsDefinedHashtypeSignature(vchSig))
         return false;
+
+    if ((flags & SCRIPT_VERIFY_STRICTENC) != 0)
+    {
+        if (!IsDefinedHashtypeSignature(vchSig))
+            return false;
+
+        unsigned char nHashType = vchSig[vchSig.size() - 1];
+        bool wispForkHash = nHashType & SIGHASH_FORKID;
+        bool wispForkEnabled = flags & SCRIPT_ENABLE_SIGHASH_FORKID;
+
+        if ((!wispForkHash && wispForkEnabled) || (wispForkHash && !wispForkEnabled))
+            return false;
     }
+
     return true;
 }
 
@@ -1267,10 +1279,36 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, co
 }
 
 
+uint256 GetPrevoutHash(const CTransaction &txTo)
+{
+  CHashWriter ss(SER_GETHASH, 0);
+  for (unsigned int n = 0; n < txTo.vin.size(); ++n)
+    ss << txTo.vin[n].prevout;
+  return ss.GetHash();
+}
 
 
+uint256 GetSequenceHash(const CTransaction &txTo)
+{
+  CHashWriter ss(SER_GETHASH, 0);
+  for (unsigned int n = 0; n < txTo.vin.size(); ++n)
+    ss << txTo.vin[n].nSequence;
+  return ss.GetHash();
+}
 
 
+uint256 GetOutputsHash(const CTransaction &txTo)
+{
+  CHashWriter ss(SER_GETHASH, 0);
+  for (unsigned int n = 0; n < txTo.vout.size(); ++n)
+    ss << txTo.vout[n];
+  return ss.GetHash();
+}
+
+
+uint256 GetForkId() {
+  return 41; // arbitrary fork ID of WISP
+}
 
 
 uint256 SignatureHash(CScript scriptCode, const CTransaction& txTo, unsigned int nIn, int nHashType)
@@ -1330,7 +1368,47 @@ uint256 SignatureHash(CScript scriptCode, const CTransaction& txTo, unsigned int
 
     // Serialize and hash
     CHashWriter ss(SER_GETHASH, 0);
-    ss << txTmp << nHashType;
+
+    if (nHashType & SIGHASH_FORKID)
+    {
+        // BUIP-HF Digest for replay protection across forks.
+        // https://github.com/bitcoincashorg/spec/blob/master/replay-protected-sighash.md
+        uint256 hashPrevOuts;
+        uint256 hashSeq;
+        uint256 hashOuts;
+
+        if (!(nHashType & SIGHASH_ANYONECANPAY))
+            hashPrevOuts = GetPrevoutHash(txTo);
+
+        if (!(nHashType & SIGHASH_ANYONECANPAY) && (nHashType & 0x1f) != SIGHASH_SINGLE && (nHashType & 0x1f) != SIGHASH_NONE)
+            hashSeq = GetSequenceHash(txTo);
+
+        if ((nHashType & 0x1f) != SIGHASH_SINGLE && (nHashType & 0x1f) != SIGHASH_NONE)
+            hashOuts = GetOutputsHash(txTo);
+        else
+        {
+            CHashWriter oss(SER_GETHASH, 0);
+            oss << txTo.vout[nIn];
+            hashOuts = oss.GetHash();
+        }
+
+        ss << txTo.nVersion; // Version
+        ss << hashPrevOuts; // Input prevouts
+        ss << hashSeq; // Input sequence
+        ss << txTo.vin[nIn].prevout;
+        ss << static_cast<const CScriptBase &>(scriptCode);
+        ss << amount;
+        ss << txTo.vin[nIn].nSequence;
+        ss << hashOuts;
+        ss << txTo.nLockTime;
+        ss << ((GetForkId() << 8) | nHashType);
+    }
+    else
+    {
+        CHashWriter ss(SER_GETHASH, 0);
+        ss << txTmp << nHashType;
+    }
+
     return ss.GetHash();
 }
 
@@ -1781,6 +1859,9 @@ bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, vecto
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CTransaction& txTo, unsigned int nIn,
                   unsigned int flags, int nHashType)
 {
+    if (flags & SCRIPT_ENABLE_SIGHASH_FORKID)
+        flags |= SCRIPT_VERIFY_STRICTENC;
+
     vector<vector<unsigned char> > stack, stackCopy;
     if (!EvalScript(stack, scriptSig, txTo, nIn, flags, nHashType))
         return false;

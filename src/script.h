@@ -42,6 +42,7 @@ enum
     SIGHASH_NONE = 2,
     SIGHASH_SINGLE = 3,
     SIGHASH_ANYONECANPAY = 0x80,
+    SIGHASH_FORKID = 0x42,
 };
 
 /** Script verification flags */
@@ -71,6 +72,8 @@ enum
     // Verify CHECKLOCKTIMEVERIFY (BIP65)
     //
     SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY = (1U << 7),
+
+    SCRIPT_ENABLE_SIGHASH_FORKID = (1U << 10),
 };
 
 // Mandatory script verification flags that all new blocks must comply with for
@@ -81,7 +84,8 @@ enum
 static const unsigned int MANDATORY_SCRIPT_VERIFY_FLAGS = SCRIPT_VERIFY_P2SH |
                                                           SCRIPT_VERIFY_NULLDUMMY |
                                                           SCRIPT_VERIFY_STRICTENC |
-                                                          SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
+                                                          SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY |
+                                                          SCRIPT_ENABLE_SIGHASH_FORKID;
 
 // Standard script verification flags that standard transactions will comply
 // with. However scripts violating these flags may still be present in valid
@@ -737,8 +741,8 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType);
 void ExtractAffectedKeys(const CKeyStore &keystore, const CScript& scriptPubKey, std::vector<CKeyID> &vKeys);
 bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet);
 bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet);
-bool SignSignature(const CKeyStore& keystore, const CScript& fromPubKey, CTransaction& txTo, unsigned int nIn, int nHashType=SIGHASH_ALL);
-bool SignSignature(const CKeyStore& keystore, const CTransaction& txFrom, CTransaction& txTo, unsigned int nIn, int nHashType=SIGHASH_ALL);
+bool SignSignature(const CKeyStore& keystore, const CScript& fromPubKey, CTransaction& txTo, unsigned int nIn, int nHashType=SIGHASH_ALL|SIGHASH_FORKID);
+bool SignSignature(const CKeyStore& keystore, const CTransaction& txFrom, CTransaction& txTo, unsigned int nIn, int nHashType=SIGHASH_ALL|SIGHASH_FORKID);
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CTransaction& txTo, unsigned int nIn,
                    unsigned int flags, int nHashType);
 bool VerifySignature(const CTransaction& txFrom, const CTransaction& txTo, unsigned int nIn, unsigned int flags, int nHashType);
