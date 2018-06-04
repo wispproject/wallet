@@ -13,6 +13,8 @@
 #include <openssl/obj_mac.h>
 
 #include "key.h"
+#include "util.h"
+#include <stdlib.h> 
 
 // RAII Wrapper around OpenSSL's EC_KEY
 class CECKey {
@@ -21,6 +23,7 @@ private:
 
 public:
     CECKey() {
+        //PKEY will crash if NDEBUG is enabled. Make sure the calls to "asserts" are turned on"
         pkey = EC_KEY_new_by_curve_name(NID_secp256k1);
         assert(pkey != NULL);
     }

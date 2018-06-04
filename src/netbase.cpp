@@ -10,6 +10,11 @@
 #include "uint256.h"
 #include "util.h"
 
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
 #ifdef HAVE_GETADDRINFO_A
 #include <netdb.h>
 #endif
@@ -326,7 +331,7 @@ bool static Socks5(string strDest, int port, SOCKET& hSocket)
     if (!InterruptibleRecv(pchRet2, 4, SOCKS5_RECV_TIMEOUT, hSocket))
     {
         CloseSocket(hSocket);
-        return false;
+        return error("Error timeout");
     }
     if (pchRet2[0] != 0x05)
     {

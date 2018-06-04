@@ -37,7 +37,6 @@
 
 #include <QApplication>
 #include <QThread>
-#include <QWebFrame>
 #include <QClipboard>
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
@@ -235,13 +234,13 @@ QString MessageThread::addMessage(int row)
 {
     return QString("{\"id\":\"%10\",\"type\":\"%1\",\"sent_date\":\"%2\",\"received_date\":\"%3\", \"label_value\":\"%4\",\"label\":\"%5\",\"labelTo\":\"%11\",\"to_address\":\"%6\",\"from_address\":\"%7\",\"message\":\"%8\",\"read\":%9},")
             .arg(mtm->index(row, MessageModel::Type)            .data().toString())
-            .arg(Qt::escape(QString::number(mtm->index(row, MessageModel::SentDateTime)    .data().toDateTime().toTime_t())))
-            .arg(Qt::escape(QString::number(mtm->index(row, MessageModel::ReceivedDateTime).data().toDateTime().toTime_t())))
+            .arg(QString::number(mtm->index(row, MessageModel::SentDateTime)    .data().toDateTime().toTime_t()).toHtmlEscaped())
+            .arg(QString::number(mtm->index(row, MessageModel::ReceivedDateTime).data().toDateTime().toTime_t()).toHtmlEscaped())
             .arg(mtm->index(row, MessageModel::Label)           .data(MessageModel::LabelRole).toString())
             .arg(mtm->index(row, MessageModel::Label)           .data().toString().replace("\\", "\\\\").replace("/", "\\/").replace("\"","\\\""))
             .arg(mtm->index(row, MessageModel::ToAddress)       .data().toString())
             .arg(mtm->index(row, MessageModel::FromAddress)     .data().toString())
-            .arg(Qt::escape(mtm->index(row, MessageModel::Message).data().toString()).replace("\\", "\\\\").replace("\"","\\\"").replace("\n", "\\n"))
+            .arg(mtm->index(row, MessageModel::Message).data().toString().toHtmlEscaped().replace("\\", "\\\\").replace("\"","\\\"").replace("\n", "\\n"))
             .arg(mtm->index(row, MessageModel::Read)            .data().toBool())
             .arg(mtm->index(row, MessageModel::Key)             .data().toString())
             .arg(mtm->index(row, MessageModel::LabelTo)         .data().toString().replace("\\", "\\\\").replace("/", "\\/").replace("\"","\\\""));
@@ -290,6 +289,8 @@ void SpectreBridge::setClientModel()
     info->insert("name",    window->clientModel->clientName());
 
     populateOptions();
+
+    emit infoChanged();
 }
 
 void SpectreBridge::setWalletModel() {
@@ -394,7 +395,7 @@ void SpectreBridge::populateOptions()
 }
 
 // Transactions
-bool SpectreBridge::addRecipient(QString address, QString label, QString narration, qint64 amount, int txnType, int nRingSize)
+void SpectreBridge::addRecipient(QString address, QString label, QString narration, qint64 amount, int txnType, int nRingSize)
 {
     SendCoinsRecipient rv;
 
@@ -415,7 +416,7 @@ bool SpectreBridge::addRecipient(QString address, QString label, QString narrati
 
     recipients.append(rv);
 
-    return true;
+    emit addRecipientResult(true);
 }
 
 void SpectreBridge::clearRecipients()
@@ -423,7 +424,7 @@ void SpectreBridge::clearRecipients()
     recipients.clear();
 }
 
-bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
+void SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
 {
     int inputTypes = -1;
     int nAnonOutputs = 0;
@@ -436,27 +437,28 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
         switch(rcp.txnTypeInd)
         {
             case TXT_SPEC_TO_SPEC:
-                formatted.append(tr("<b>%1</b> to %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), Qt::escape(rcp.label), rcp.address));
+                formatted.append(tr("<b>%1</b> to %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 0;
                 break;
             case TXT_SPEC_TO_ANON:
-                formatted.append(tr("<b>%1</b> to SPECTRE %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), Qt::escape(rcp.label), rcp.address));
+                formatted.append(tr("<b>%1</b> to SPECTRE %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 0;
                 nAnonOutputs++;
                 break;
             case TXT_ANON_TO_ANON:
-                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to SPECTRE %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), Qt::escape(rcp.label), rcp.address));
+                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to SPECTRE %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 1;
                 nAnonOutputs++;
                 break;
             case TXT_ANON_TO_SPEC:
-                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to XSPEC %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), Qt::escape(rcp.label), rcp.address));
+                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to XSPEC %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 1;
                 break;
             default:
                 QMessageBox::critical(window, tr("Error:"), tr("Unknown txn type detected %1.").arg(rcp.txnTypeInd),
                               QMessageBox::Abort, QMessageBox::Abort);
-                return false;
+                emit sendCoinsResult(false);
+                return;
         }
 
         if (inputTypes == -1)
@@ -466,7 +468,8 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
         {
             QMessageBox::critical(window, tr("Error:"), tr("Input types must match for all recipients."),
                           QMessageBox::Abort, QMessageBox::Abort);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         };
 
         if (inputTypes == 1)
@@ -478,7 +481,8 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
             {
                 QMessageBox::critical(window, tr("Error:"), tr("Ring sizes must match for all recipients."),
                               QMessageBox::Abort, QMessageBox::Abort);
-                return false;
+                emit sendCoinsResult(false);
+            return;
             };
 
             if (ringSizes < (int)MIN_RING_SIZE
@@ -486,7 +490,8 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
             {
                 QMessageBox::critical(window, tr("Error:"), tr("Ring size outside range [%1, %2].").arg(MIN_RING_SIZE).arg(MAX_RING_SIZE),
                               QMessageBox::Abort, QMessageBox::Abort);
-                return false;
+                emit sendCoinsResult(false);
+            return;
             };
 
             if (ringSizes == 1)
@@ -495,7 +500,8 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
                     tr("Confirm send coins"), tr("Are you sure you want to send?\nRing size of one is not anonymous.").arg(formatted.join(tr(" and "))),
                     QMessageBox::Yes|QMessageBox::Cancel, QMessageBox::Cancel);
                 if (retval != QMessageBox::Yes)
-                    return false;
+                    emit sendCoinsResult(false);
+            return;
             };
         };
     };
@@ -504,8 +510,10 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
         tr("Confirm send coins"), tr("Are you sure you want to send %1?").arg(formatted.join(tr(" and "))),
         QMessageBox::Yes|QMessageBox::Cancel, QMessageBox::Cancel);
 
-    if(retval != QMessageBox::Yes)
-        return false;
+    if(retval != QMessageBox::Yes) {
+        emit sendCoinsResult(false);
+            return;
+    }
 
     WalletModel::SendCoinsReturn sendstatus;
 
@@ -519,7 +527,8 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
                 QMessageBox::warning(window, tr("Send Coins"),
                     tr("The change address is not valid, please recheck."),
                     QMessageBox::Ok, QMessageBox::Ok);
-                return false;
+                emit sendCoinsResult(false);
+            return;
             };
 
             CoinControlDialog::coinControl->destChange = addrChange.Get();
@@ -530,8 +539,10 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
     WalletModel::UnlockContext ctx(window->walletModel->requestUnlock());
 
     // Unlock wallet was cancelled
-    if(!ctx.isValid())
-        return false;
+    if(!ctx.isValid()) {
+        emit sendCoinsResult(false);
+            return;
+    }
 
     if (inputTypes == 1 || nAnonOutputs > 0)
         sendstatus = window->walletModel->sendCoinsAnon(recipients, fUseCoinControl ? CoinControlDialog::coinControl : NULL);
@@ -544,81 +555,97 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("The recipient address is not valid, please recheck."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::InvalidAmount:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("The amount to pay must be larger than 0."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::AmountExceedsBalance:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("The amount exceeds your balance."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::AmountWithFeeExceedsBalance:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("The total exceeds your balance when the %1 transaction fee is included.").
                 arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, sendstatus.fee)),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::DuplicateAddress:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Duplicate address found, can only send to each address once per send operation."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::TransactionCreationFailed:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error: Transaction creation failed."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::TransactionCommitFailed:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error: The transaction was rejected. This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::NarrationTooLong:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error: Narration is too long."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::RingSizeError:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error: Ring Size Error."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::InputTypeError:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error: Input Type Error."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::SCR_NeedFullMode:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error: Must be in full mode to send anon."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::SCR_StealthAddressFail:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error: Invalid Stealth Address."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::SCR_AmountWithFeeExceedsSpectreBalance:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("The total exceeds your spectre balance when the %1 transaction fee is included.").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, sendstatus.fee)),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::SCR_Error:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error generating transaction."),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::SCR_ErrorWithMsg:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("Error generating transaction: %1").arg(sendstatus.hex),
                 QMessageBox::Ok, QMessageBox::Ok);
-            return false;
+            emit sendCoinsResult(false);
+            return;
 
         case WalletModel::Aborted: // User aborted, nothing to do
-            return false;
+            emit sendCoinsResult(false);
+            return;
         case WalletModel::OK:
             //accept();
             CoinControlDialog::coinControl->UnSelectAll();
@@ -628,7 +655,8 @@ bool SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
             break;
     }
 
-    return true;
+    emit sendCoinsResult(true);
+            return;
 }
 
 void SpectreBridge::openCoinControl()
@@ -726,9 +754,9 @@ void SpectreBridge::insertTransactions(const QModelIndex & parent, int start, in
     transactionModel->populateRows(start, end);
 }
 
-QString SpectreBridge::transactionDetails(QString txid)
+void SpectreBridge::transactionDetails(QString txid)
 {
-    return window->walletModel->getTransactionTableModel()->index(window->walletModel->getTransactionTableModel()->lookupTransaction(txid), 0).data(TransactionTableModel::LongDescriptionRole).toString();
+    emit transactionDetailsResult(window->walletModel->getTransactionTableModel()->index(window->walletModel->getTransactionTableModel()->lookupTransaction(txid), 0).data(TransactionTableModel::LongDescriptionRole).toString());
 }
 
 // Addresses
@@ -762,16 +790,26 @@ void SpectreBridge::insertAddresses(const QModelIndex & parent, int start, int e
     addressModel->poplateRows(start, end);
 }
 
-QString SpectreBridge::newAddress(QString addressLabel, int addressType, QString address, bool send)
+void SpectreBridge::newAddress(QString addressLabel, int addressType, QString address, bool send)
 {
     // Generate a new address to associate with given label
     // NOTE: unlock happens in addRow
     QString rv = addressModel->atm->addRow(send ? AddressTableModel::Send : AddressTableModel::Receive, addressLabel, address, addressType);
     addressModel->populateAddressTable();
-    return rv;
+    emit newAddressResult(rv);
 }
 
-QString SpectreBridge::lastAddressError()
+//replica  of the above method for Javascript to diffrentiate when call backs are needed
+void SpectreBridge::newAddress_2(QString addressLabel, int addressType, QString address, bool send)
+{
+    // Generate a new address to associate with given label
+    // NOTE: unlock happens in addRow
+    QString rv = addressModel->atm->addRow(send ? AddressTableModel::Send : AddressTableModel::Receive, addressLabel, address, addressType);
+    addressModel->populateAddressTable();
+    emit newAddress_2Result(rv);
+}
+
+void SpectreBridge::lastAddressError()
 {
     QString sError;
     AddressTableModel::EditStatus status = addressModel->atm->getEditStatus();
@@ -796,12 +834,19 @@ QString SpectreBridge::lastAddressError()
             break;
     };
 
-    return sError;
+    emit lastAddressErrorResult(sError);
 }
 
 QString SpectreBridge::getAddressLabel(QString address)
 {
-    return addressModel->atm->labelForAddress(address);
+    QString result = addressModel->atm->labelForAddress(address);
+    emit getAddressLabelResult(result);
+    return result;
+}
+
+void SpectreBridge::getAddressLabel_2(QString address)
+{
+    emit getAddressLabel_2Result(addressModel->atm->labelForAddress(address));
 }
 
 void SpectreBridge::updateAddressLabel(QString address, QString label)
@@ -816,9 +861,10 @@ void SpectreBridge::updateAddressLabel(QString address, QString label)
     addressModel->atm->setData(addressModel->atm->index(addressModel->atm->lookupAddress(address), addressModel->atm->Label), QVariant(label), Qt::EditRole);
 }
 
-bool SpectreBridge::validateAddress(QString address)
+void SpectreBridge::validateAddress(QString address)
 {
-    return window->walletModel->validateAddress(address);
+    bool result = window->walletModel->validateAddress(address);
+    emit validateAddressResult(result);
 }
 
 bool SpectreBridge::deleteAddress(QString address)
@@ -834,17 +880,17 @@ void SpectreBridge::appendMessages(QString messages, bool reset)
 
 void SpectreBridge::appendMessage(int row)
 {
-    emitMessage(Qt::escape(window->messageModel->index(row, MessageModel::Key).data().toString()),
-                Qt::escape(window->messageModel->index(row, MessageModel::Type).data().toString()),
+    emitMessage(window->messageModel->index(row, MessageModel::Key).data().toString().toHtmlEscaped(),
+                window->messageModel->index(row, MessageModel::Type).data().toString().toHtmlEscaped(),
                 window->messageModel->index(row, MessageModel::SentDateTime)    .data().toDateTime().toTime_t(),
                 window->messageModel->index(row, MessageModel::ReceivedDateTime).data().toDateTime().toTime_t(),
-                Qt::escape(window->messageModel->index(row, MessageModel::Label).data(MessageModel::LabelRole).toString()),
-                Qt::escape(window->messageModel->index(row, MessageModel::Label).data().toString().replace("\"","\\\"").replace("\\", "\\\\").replace("/", "\\/")),
-                Qt::escape(window->messageModel->index(row, MessageModel::LabelTo).data().toString().replace("\"","\\\"").replace("\\", "\\\\").replace("/", "\\/")),
-                Qt::escape(window->messageModel->index(row, MessageModel::ToAddress).data().toString()),
-                Qt::escape(window->messageModel->index(row, MessageModel::FromAddress).data().toString()),
+                window->messageModel->index(row, MessageModel::Label).data(MessageModel::LabelRole).toString().toHtmlEscaped(),
+                window->messageModel->index(row, MessageModel::Label).data().toString().replace("\"","\\\"").replace("\\", "\\\\").replace("/", "\\/").toHtmlEscaped(),
+                window->messageModel->index(row, MessageModel::LabelTo).data().toString().replace("\"","\\\"").replace("\\", "\\\\").replace("/", "\\/").toHtmlEscaped(),
+                window->messageModel->index(row, MessageModel::ToAddress).data().toString().toHtmlEscaped(),
+                window->messageModel->index(row, MessageModel::FromAddress).data().toString().toHtmlEscaped(),
                 window->messageModel->index(row, MessageModel::Read)            .data().toBool(),
-                Qt::escape(window->messageModel->index(row, MessageModel::Message).data().toString()));
+                window->messageModel->index(row, MessageModel::Message).data().toString().toHtmlEscaped());
 }
 
 void SpectreBridge::populateMessageTable()
@@ -864,14 +910,14 @@ void SpectreBridge::insertMessages(const QModelIndex & parent, int start, int en
     }
 }
 
-bool SpectreBridge::deleteMessage(QString key)
+void SpectreBridge::deleteMessage(QString key)
 {
-    return window->messageModel->removeRow(thMessage->mtm->lookupMessage(key));
+    window->messageModel->removeRow(thMessage->mtm->lookupMessage(key));
 }
 
-bool SpectreBridge::markMessageAsRead(QString key)
+void SpectreBridge::markMessageAsRead(QString key)
 {
-    return window->messageModel->markMessageAsRead(key);
+    window->messageModel->markMessageAsRead(key);
 }
 
 QString SpectreBridge::getPubKey(QString address)
@@ -888,13 +934,15 @@ bool SpectreBridge::setPubKey(QString address, QString pubkey)
     return res == 0||res == 4;
 }
 
-bool SpectreBridge::sendMessage(const QString &address, const QString &message, const QString &from)
+void SpectreBridge::sendMessage(const QString &address, const QString &message, const QString &from)
 {
     WalletModel::UnlockContext ctx(window->walletModel->requestUnlock());
 
     // Unlock wallet was cancelled
-    if(!ctx.isValid())
-        return false;
+    if(!ctx.isValid()) {
+        emit sendMessageResult(false);
+        return;
+    }
 
     MessageModel::StatusCode sendstatus = thMessage->mtm->sendMessage(address, message, from);
 
@@ -904,39 +952,47 @@ bool SpectreBridge::sendMessage(const QString &address, const QString &message, 
         QMessageBox::warning(window, tr("Send Message"),
             tr("The recipient address is not valid, please recheck."),
             QMessageBox::Ok, QMessageBox::Ok);
-        return false;
+        emit sendMessageResult(false);
+        return;
     case MessageModel::InvalidMessage:
         QMessageBox::warning(window, tr("Send Message"),
             tr("The message can't be empty."),
             QMessageBox::Ok, QMessageBox::Ok);
-        return false;
+        emit sendMessageResult(false);
+        return;
     case MessageModel::DuplicateAddress:
         QMessageBox::warning(window, tr("Send Message"),
             tr("Duplicate address found, can only send to each address once per send operation."),
             QMessageBox::Ok, QMessageBox::Ok);
-        return false;
+        emit sendMessageResult(false);
+        return;
     case MessageModel::MessageCreationFailed:
         QMessageBox::warning(window, tr("Send Message"),
             tr("Error: Message creation failed."),
             QMessageBox::Ok, QMessageBox::Ok);
-        return false;
+        emit sendMessageResult(false);
+        return;
     case MessageModel::MessageCommitFailed:
         QMessageBox::warning(window, tr("Send Message"),
             tr("Error: The message was rejected."),
             QMessageBox::Ok, QMessageBox::Ok);
-        return false;
+        emit sendMessageResult(false);
+        return;
     case MessageModel::Aborted:             // User aborted, nothing to do
-        return false;
+        emit sendMessageResult(false);
+        return;
     case MessageModel::FailedErrorShown:    // Send failed, error message was displayed
-        return false;
+        emit sendMessageResult(false);
+        return;
     case MessageModel::OK:
         break;
     }
 
-    return true;
+    emit sendMessageResult(true);
+    return;
 }
 
-QString SpectreBridge::createGroupChat(QString label)
+void SpectreBridge::createGroupChat(QString label)
 {
     //return address to invite to people to.
     LOCK2(cs_main, pwalletMain->cs_wallet);
@@ -956,16 +1012,18 @@ QString SpectreBridge::createGroupChat(QString label)
 
     pwalletMain->SetAddressBookName(addr.Get(), strLabel, NULL, true, true);
 
-    if (!pwalletMain->AddKeyPubKey(secret, pubkey))
-        return "false";
+    if (!pwalletMain->AddKeyPubKey(secret, pubkey)) {
+        emit createGroupChatResult("false");
+        return;
+    }
 
     SecureMsgAddWalletAddresses();
 
-    return QString::fromStdString(strAddress);
+    emit createGroupChatResult(QString::fromStdString(strAddress));
 }
 
 
-QString SpectreBridge::joinGroupChat(QString privkey, QString label)
+void SpectreBridge::joinGroupChat(QString privkey, QString label)
 {
     /*
     EXPERIMENTAL CODE, UNTESTED.
@@ -977,8 +1035,14 @@ QString SpectreBridge::joinGroupChat(QString privkey, QString label)
     CBitcoinSecret vchSecret;
     bool fGood = vchSecret.SetString(strSecret);
 
-    if (!fGood) return "false"; //throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key");
-    if (fWalletUnlockStakingOnly) return "false"; //throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Wallet is unlocked for staking only.");
+    if (!fGood) {
+        emit joinGroupChatResult("false");
+        return;
+    } //throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key");
+    if (fWalletUnlockStakingOnly) {
+        emit joinGroupChatResult("false");
+        return;
+    } //throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Wallet is unlocked for staking only.");
 
     CKey key = vchSecret.GetKey();
     CPubKey pubkey = key.GetPubKey();
@@ -990,13 +1054,17 @@ QString SpectreBridge::joinGroupChat(QString privkey, QString label)
         pwalletMain->SetAddressBookName(vchAddress, strLabel);
 
         // Don't throw error in case a key is already there
-        if (pwalletMain->HaveKey(vchAddress))
-            return "false";
+        if (pwalletMain->HaveKey(vchAddress)) {
+            emit joinGroupChatResult("false");
+            return;
+        }
 
         pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = nCreateTime;
 
-        if (!pwalletMain->AddKeyPubKey(key, pubkey))
-            return "false";
+        if (!pwalletMain->AddKeyPubKey(key, pubkey)) {
+            emit joinGroupChatResult("false");
+            return;
+        }
             //throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
 
         // whenever a key is imported, we need to scan the whole chain
@@ -1007,7 +1075,8 @@ QString SpectreBridge::joinGroupChat(QString privkey, QString label)
     SecureMsgAddWalletAddresses();
     //TODO: return address and appendAddress with javascript
     CBitcoinAddress addr(vchAddress);
-    return QString::fromStdString(addr.ToString());
+    emit joinGroupChatResult(QString::fromStdString(addr.ToString()));
+    return;
 }
 
 
@@ -1107,16 +1176,11 @@ QString SpectreBridge::translateHtmlString(QString string)
     return string;
 }
 
-QVariantMap SpectreBridge::userAction(QVariantMap action)
+QJsonValue SpectreBridge::userAction(QJsonValue action)
 {
-    QVariantMap::iterator it(action.begin());
+    QJsonArray array;
 
-    QString key(it.key());
-    bool fOK;
-    key.toInt(&fOK);
-
-    if(fOK)
-        key = it.value().toString();
+    QString key = action.toArray().at(0).toString();
 
     if(key == "backupWallet")
         window->backupWallet();
@@ -1129,7 +1193,7 @@ QVariantMap SpectreBridge::userAction(QVariantMap action)
     if(key == "toggleLock")
         window->toggleLock();
     if(key == "developerConsole")
-        window->webView->page()->triggerAction(QWebPage::InspectElement);
+        window->webEngineView->page()->triggerAction(QWebEnginePage::InspectElement);
     if(key == "aboutClicked")
         window->aboutClicked();
     if(key == "aboutQtClicked")
@@ -1138,23 +1202,24 @@ QVariantMap SpectreBridge::userAction(QVariantMap action)
         window->rpcConsole->show();
     if(key == "clearRecipients")
         clearRecipients();
-    if(key == "optionsChanged")
-    {
-        OptionsModel * optionsModel(window->clientModel->getOptionsModel());
-        QVariantMap value(it.value().toMap());
+    //TODO: Port this part of the code to the new json based system
+//    if(key == "optionsChanged")
+//    {
+//        OptionsModel * optionsModel(window->clientModel->getOptionsModel());
+//        QVariantMap value(it.value().toMap());
 
-        for(int option = 0;option < optionsModel->rowCount(); option++)
-            if(value.contains(optionsModel->optionIDName(option)))
-                optionsModel->setData(optionsModel->index(option), value.value(optionsModel->optionIDName(option)));
+//        for(int option = 0;option < optionsModel->rowCount(); option++)
+//            if(value.contains(optionsModel->optionIDName(option)))
+//                optionsModel->setData(optionsModel->index(option), value.value(optionsModel->optionIDName(option)));
 
-        populateOptions();
-    }
+//        populateOptions();
+//    }
 
-    return QVariantMap();
+    return QJsonValue();
 }
 
 // Blocks
-QVariantMap SpectreBridge::listLatestBlocks()
+void SpectreBridge::listLatestBlocks()
 {
     CBlockIndex* recentBlock = pindexBest;
     CBlock block;
@@ -1169,7 +1234,8 @@ QVariantMap SpectreBridge::listLatestBlocks()
         if (block.IsNull() || block.vtx.size() < 1)
         {
             latestBlocks.insert("error_msg", "Block not found.");
-            return latestBlocks;
+            emit listLatestBlocksResult(latestBlocks);
+            return;
         };
 
         QVariantMap latestBlock;
@@ -1181,10 +1247,11 @@ QVariantMap SpectreBridge::listLatestBlocks()
         latestBlocks.insert(QString::number(x) , latestBlock);
         recentBlock = recentBlock->pprev;
     }
-    return latestBlocks;
+    emit listLatestBlocksResult(latestBlocks);
+    return;
 }
 
-QVariantMap SpectreBridge::findBlock(QString searchID)
+void SpectreBridge::findBlock(QString searchID)
 {
     CBlockIndex* findBlock;
 
@@ -1217,7 +1284,8 @@ QVariantMap SpectreBridge::findBlock(QString searchID)
     if (!findBlock)
     {
         foundBlock.insert("error_msg", "Block / transaction not found.");
-        return foundBlock;
+        emit findBlockResult(foundBlock);
+        return;
     };
 
     CBlock block;
@@ -1226,7 +1294,8 @@ QVariantMap SpectreBridge::findBlock(QString searchID)
     if (block.IsNull() || block.vtx.size() < 1)
     {
         foundBlock.insert("error_msg", "Block not found.");
-        return foundBlock;
+        emit findBlockResult(foundBlock);
+        return;
     };
 
     foundBlock.insert("block_hash"        , QString::fromStdString(findBlock->GetBlockHash().ToString()));
@@ -1236,10 +1305,10 @@ QVariantMap SpectreBridge::findBlock(QString searchID)
     foundBlock.insert("block_size"        , findBlock->nBits);
     foundBlock.insert("error_msg"         , "");
 
-    return foundBlock;
+    emit findBlockResult(foundBlock);
 }
 
-QVariantMap SpectreBridge::blockDetails(QString blkHash)
+void SpectreBridge::blockDetails(QString blkHash)
 {
     QVariantMap blockDetail;
 
@@ -1253,7 +1322,8 @@ QVariantMap SpectreBridge::blockDetails(QString blkHash)
     if (mi == mapBlockIndex.end())
     {
         blockDetail.insert("error_msg", "Block not found.");
-        return blockDetail;
+        emit blockDetailsResult(blockDetail);
+        return;
     };
 
     blkIndex  = mi->second;
@@ -1262,7 +1332,8 @@ QVariantMap SpectreBridge::blockDetails(QString blkHash)
     if (block.IsNull() || block.vtx.size() < 1)
     {
         blockDetail.insert("error_msg", "Block not found.");
-        return blockDetail;
+        emit blockDetailsResult(blockDetail);
+        return;
     };
 
     CTxDB txdb("r");
@@ -1317,10 +1388,11 @@ QVariantMap SpectreBridge::blockDetails(QString blkHash)
     blockDetail.insert("block_nonce"       , blkIndex->nNonce);
     blockDetail.insert("error_msg"         , "");
 
-    return blockDetail;
+    emit blockDetailsResult(blockDetail);
+    return;
 }
 
-QVariantMap SpectreBridge::listTransactionsForBlock(QString blkHash)
+void SpectreBridge::listTransactionsForBlock(QString blkHash)
 {
     QVariantMap blkTransactions;
 
@@ -1334,7 +1406,8 @@ QVariantMap SpectreBridge::listTransactionsForBlock(QString blkHash)
     if (mi == mapBlockIndex.end())
     {
         blkTransactions.insert("error_msg", "Block not found.");
-        return blkTransactions;
+        emit listTransactionsForBlockResult(blkTransactions);
+        return;
     };
 
     selectedBlkIndex  = mi->second;
@@ -1343,7 +1416,8 @@ QVariantMap SpectreBridge::listTransactionsForBlock(QString blkHash)
     if (block.IsNull() || block.vtx.size() < 1)
     {
         blkTransactions.insert("error_msg", "Block not found.");
-        return blkTransactions;
+        emit listTransactionsForBlockResult(blkTransactions);
+        return;
     };
 
     for (uint x = 0; x < block.vtx.size(); x++)
@@ -1360,10 +1434,11 @@ QVariantMap SpectreBridge::listTransactionsForBlock(QString blkHash)
         blkTransactions.insert(QString::number(x), blockTxn);
     }
 
-    return blkTransactions;
+    emit listTransactionsForBlockResult(blkTransactions);
+    return;
 }
 
-QVariantMap SpectreBridge::txnDetails(QString blkHash, QString txnHash)
+void SpectreBridge::txnDetails(QString blkHash, QString txnHash)
 {
     QVariantMap txnDetail;
 
@@ -1380,7 +1455,8 @@ QVariantMap SpectreBridge::txnDetails(QString blkHash, QString txnHash)
     if (mi == mapBlockIndex.end())
     {
         txnDetail.insert("error_msg", "Block not found.");
-        return txnDetail;
+        emit txnDetailsResult(txnDetail);
+        return;
     };
     selectedBlkIndex  = mi->second;
     block.ReadFromDisk(selectedBlkIndex, true);
@@ -1388,7 +1464,8 @@ QVariantMap SpectreBridge::txnDetails(QString blkHash, QString txnHash)
     if (block.IsNull() || block.vtx.size() < 1)
     {
         txnDetail.insert("error_msg", "Block not found.");
-        return txnDetail;
+        emit txnDetailsResult(txnDetail);
+        return;
     };
 
     for (uint x = 0; x < block.vtx.size(); x++)
@@ -1512,7 +1589,8 @@ QVariantMap SpectreBridge::txnDetails(QString blkHash, QString txnHash)
         break;
     }
 
-    return txnDetail;
+    emit txnDetailsResult(txnDetail);
+    return;
 }
 
 QVariantMap SpectreBridge::signMessage(QString address, QString message)
@@ -1611,7 +1689,7 @@ QVariantMap SpectreBridge::verifyMessage(QString address, QString message, QStri
     return result;
 }
 
-QVariantMap SpectreBridge::getNewMnemonic(QString password, QString language)
+void SpectreBridge::getNewMnemonic(QString password, QString language)
 {
     QVariantMap result;
     int nLanguage = language.toInt();
@@ -1636,13 +1714,15 @@ QVariantMap SpectreBridge::getNewMnemonic(QString password, QString language)
         if (0 != MnemonicEncode(nLanguage, vEntropy, sMnemonic, sError))
         {
             result.insert("error_msg", strprintf("MnemonicEncode failed %s.", sError.c_str()).c_str());
-            return result;
+            emit getNewMnemonicResult(result);
+            return;
         }
 
         if (0 != MnemonicToSeed(sMnemonic, sPassword, vSeed))
         {
           result.insert("error_msg", "MnemonicToSeed failed.");
-          return result;
+          emit getNewMnemonicResult(result);
+          return;
         }
 
         ekMaster.SetMaster(&vSeed[0], vSeed.size());
@@ -1668,10 +1748,11 @@ QVariantMap SpectreBridge::getNewMnemonic(QString password, QString language)
     result.insert("mnemonic", QString::fromStdString(sMnemonic));
     //result.insert("master", QString::fromStdString(sKey));
 
-    return result;
+    emit getNewMnemonicResult(result);
+    return;
 }
 
-QVariantMap SpectreBridge::importFromMnemonic(QString inMnemonic, QString inPassword, QString inLabel, bool fBip44, int64_t nCreateTime)
+void SpectreBridge::importFromMnemonic(QString inMnemonic, QString inPassword, QString inLabel, bool fBip44, int64_t nCreateTime)
 {
     std::string sPassword = inPassword.toStdString();
     std::string sMnemonic = inMnemonic.toStdString();
@@ -1684,13 +1765,15 @@ QVariantMap SpectreBridge::importFromMnemonic(QString inMnemonic, QString inPass
     if (0 != MnemonicDecode(-1, sMnemonic, vEntropy, sError))
     {
         result.insert("error_msg", QString::fromStdString(strprintf("MnemonicDecode failed %s.", sError.c_str()).c_str() ));
-        return result;
+        emit importFromMnemonicResult(result);
+        return;
     }
 
     if (0 != MnemonicToSeed(sMnemonic, sPassword, vSeed))
     {
         result.insert("error_msg", "MnemonicToSeed failed.");
-        return result;
+        emit importFromMnemonicResult(result);
+        return;
     }
 
     CExtKey ekMaster;
@@ -1700,7 +1783,8 @@ QVariantMap SpectreBridge::importFromMnemonic(QString inMnemonic, QString inPass
     if (!ekMaster.IsValid())
     {
         result.insert("error_msg", "Invalid key.");
-        return result;
+        emit importFromMnemonicResult(result);
+        return;
     }
 
     eKey58.SetKey(ekMaster, CChainParams::EXT_SECRET_KEY);
@@ -1729,8 +1813,9 @@ QVariantMap SpectreBridge::importFromMnemonic(QString inMnemonic, QString inPass
     // - in c++11 strings are definitely contiguous, and before they're very unlikely not to be
     //    OPENSSL_cleanse(&sMnemonic[0], sMnemonic.size());
     //    OPENSSL_cleanse(&sPassword[0], sPassword.size());
-    return result = extKeyImport(QString::fromStdString(eKey58.ToString()), inLabel, fBip44, nCreateTime);
-
+    connect(this, SIGNAL(extKeyImportResult(QVariantMap)), this, SIGNAL(importFromMnemonicResult(QVariantMap)));
+    extKeyImport(QString::fromStdString(eKey58.ToString()), inLabel, fBip44, nCreateTime);
+    return;
 }
 
 inline uint32_t reversePlace(uint8_t *p)
@@ -1972,7 +2057,7 @@ public:
     QVariantMap *resultMap;
 };
 
-QVariantMap SpectreBridge::extKeyAccList() {
+void SpectreBridge::extKeyAccList() {
     QVariantMap result;
 
     GUIListExtCallback extKeys(&result, 10 );
@@ -1986,10 +2071,11 @@ QVariantMap SpectreBridge::extKeyAccList() {
 
     addr.GetKeyID(extKeys.idMaster);
 
-    return result;
+    emit extKeyAccListResult(result);
+    return;
 }
 
-QVariantMap SpectreBridge::extKeyList() {
+void SpectreBridge::extKeyList() {
     QVariantMap result;
 
     GUIListExtCallback extKeys(&result, 10 );
@@ -1999,10 +2085,11 @@ QVariantMap SpectreBridge::extKeyList() {
         LoopExtKeysInDB(true, false, extKeys);
     } //cs_wallet
 
-    return result;
+    emit extKeyListResult(result);
+    return;
 }
 
-QVariantMap SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBip44, int64_t nCreateTime)
+void SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBip44, int64_t nCreateTime)
 {
     QVariantMap result;
     std::string sInKey = inKey.toStdString();
@@ -2019,14 +2106,17 @@ QVariantMap SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBi
          && !eKey58.IsValid(CChainParams::EXT_PUBLIC_KEY_BTC))
         {
             result.insert("error_msg", "Import failed - Key must begin with Spectrecoin prefix.");
-            return result;
+            emit extKeyImportResult(result);
+            return;
         }
 
         sek.kp = eKey58.GetKey();
     } else
     {
         result.insert("error_msg", "Import failed - Invalid key.");
-        return result;
+        emit extKeyImportResult(result);
+        disconnect(this, SIGNAL(extKeyImportResult(QVariantMap)), this, SIGNAL(importFromMnemonicResult(QVariantMap)));
+        return;
     };
 
     {
@@ -2035,19 +2125,25 @@ QVariantMap SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBi
         if (!wdb.TxnBegin())
         {
             result.insert("error_msg", "TxnBegin failed.");
-            return result;
+            emit extKeyImportResult(result);
+            disconnect(this, SIGNAL(extKeyImportResult(QVariantMap)), this, SIGNAL(importFromMnemonicResult(QVariantMap)));
+            return;
         }
         int rv;
         if (0 != (rv = pwalletMain->ExtKeyImportLoose(&wdb, sek, fBip44, false)))
         {
             wdb.TxnAbort();
             result.insert("error_msg", QString("ExtKeyImportLoose failed, %1").arg(ExtKeyGetString(rv)));
-            return result;
+            emit extKeyImportResult(result);
+            disconnect(this, SIGNAL(extKeyImportResult(QVariantMap)), this, SIGNAL(importFromMnemonicResult(QVariantMap)));
+            return;
         } else
             if (!wdb.TxnCommit())
             {
                 result.insert("error_msg", "TxnCommit failed.");
-                return result;
+                emit extKeyImportResult(result);
+                disconnect(this, SIGNAL(extKeyImportResult(QVariantMap)), this, SIGNAL(importFromMnemonicResult(QVariantMap)));
+                return;
             };
     } // cs_wallet
 
@@ -2078,7 +2174,9 @@ QVariantMap SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBi
             if (!wdb.TxnCommit())
             {
                 result.insert("error_msg", "TxnCommit failed!");
-                return result;
+                emit extKeyImportResult(result);
+                disconnect(this, SIGNAL(extKeyImportResult(QVariantMap)), this, SIGNAL(importFromMnemonicResult(QVariantMap)));
+                return;
             };
     } // cs_wallet
 
@@ -2090,10 +2188,12 @@ QVariantMap SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBi
     // If we get here all went well and the message is valid
     result.insert("error_msg", "");
 
-    return result;
+    emit extKeyImportResult(result);
+    disconnect(this, SIGNAL(extKeyImportResult(QVariantMap)), this, SIGNAL(importFromMnemonicResult(QVariantMap)));
+    return;
 }
 
-QVariantMap SpectreBridge::extKeySetDefault(QString extKeyID)
+void SpectreBridge::extKeySetDefault(QString extKeyID)
 {
     QVariantMap result;
 
@@ -2101,7 +2201,8 @@ QVariantMap SpectreBridge::extKeySetDefault(QString extKeyID)
     if (extKeyID.length() == 0)
     {
         result.insert("error_msg", "Must specify ext key or id.");
-        return result;
+        emit extKeySetDefaultResult(result);
+        return;
     };
 
     CKeyID idNewDefault;
@@ -2119,25 +2220,29 @@ QVariantMap SpectreBridge::extKeySetDefault(QString extKeyID)
         if (!wdb.TxnBegin())
         {
             result.insert("error_msg", "TxnBegin failed.");
-            return result;
+            emit extKeySetDefaultResult(result);
+            return;
         }
 
         if (!wdb.ReadExtAccount(idNewDefault, *sea))
         {
             result.insert("error_msg", "Account not in wallet.");
-            return result;
+            emit extKeySetDefaultResult(result);
+            return;
         }
 
         if (!wdb.WriteNamedExtKeyId("defaultAccount", idNewDefault))
         {
             wdb.TxnAbort();
             result.insert("error_msg", "WriteNamedExtKeyId failed.");
-            return result;
+            emit extKeySetDefaultResult(result);
+            return;
         };
         if (!wdb.TxnCommit())
         {
             result.insert("error_msg", "TxnCommit failed.");
-            return result;
+            emit extKeySetDefaultResult(result);
+            return;
         }
 
         pwalletMain->idDefaultAccount = idNewDefault;
@@ -2154,18 +2259,19 @@ QVariantMap SpectreBridge::extKeySetDefault(QString extKeyID)
 
     // If we get here all went well
     result.insert("error_msg", "");
-    return result;
+    emit extKeySetDefaultResult(result);
+    return;
 }
 
-QVariantMap SpectreBridge::extKeySetMaster(QString extKeyID)
+void SpectreBridge::extKeySetMaster(QString extKeyID)
 {
     QVariantMap result;
     std::string sInKey = extKeyID.toStdString();
     if (extKeyID.length() == 0)
     {
         result.insert("error_msg", "Must specify ext key or id.");
-
-        return result;
+        emit extKeySetMasterResult(result);
+        return;
     };
 
     CKeyID idNewMaster;
@@ -2186,7 +2292,8 @@ QVariantMap SpectreBridge::extKeySetMaster(QString extKeyID)
     } else
     {
         result.insert("error_msg", "Invalid key: " + extKeyID);
-        return result;
+        emit extKeySetMasterResult(result);
+        return;
     };
 
     {
@@ -2195,7 +2302,8 @@ QVariantMap SpectreBridge::extKeySetMaster(QString extKeyID)
         if (!wdb.TxnBegin())
         {
             result.insert("error_msg", "TxnBegin failed.");
-            return result;
+            emit extKeySetMasterResult(result);
+            return;
         }
 
         int rv;
@@ -2203,12 +2311,14 @@ QVariantMap SpectreBridge::extKeySetMaster(QString extKeyID)
         {
             wdb.TxnAbort();
             result.insert("error_msg", QString::fromStdString(strprintf("ExtKeySetMaster failed, %s.", ExtKeyGetString(rv))));
-            return result;
+            emit extKeySetMasterResult(result);
+            return;
         };
         if (!wdb.TxnCommit())
         {
             result.insert("error_msg", "TxnCommit failed.");
-            return result;
+            emit extKeySetMasterResult(result);
+            return;
         }
     } // cs_wallet
 
@@ -2216,10 +2326,11 @@ QVariantMap SpectreBridge::extKeySetMaster(QString extKeyID)
     result.insert("error_msg", "");
     result.insert("result", "Success.");
 
-    return result;
+    emit extKeySetMasterResult(result);
+    return;
 }
 
-QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
+void SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
 {
     QVariantMap result;
     std::string sInKey = extKeyID.toStdString();
@@ -2227,7 +2338,8 @@ QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
     if (extKeyID.length() == 0)
     {
         result.insert("error_msg", "Must specify ext key or id.");
-        return result;
+        emit extKeySetActiveResult(result);
+        return;
     };
 
 
@@ -2237,7 +2349,8 @@ QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
     if (!addr.SetString(sInKey))
     {
         result.insert("error_msg", "Invalid key or account id.");
-        return result;
+        emit extKeySetActiveResult(result);
+        return;
     }
 
     bool fAccount = false;
@@ -2256,7 +2369,8 @@ QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
     } else
     {
         result.insert("error_msg", "Invalid key or account id.");
-        return result;
+        emit extKeySetActiveResult(result);
+        return;
     }
 
     CStoredExtKey sek;
@@ -2267,7 +2381,8 @@ QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
         if (!wdb.TxnBegin())
         {
             result.insert("error_msg", "TxnBegin failed.");
-            return result;
+            emit extKeySetActiveResult(result);
+            return;
         }
 
 
@@ -2286,13 +2401,15 @@ QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
                 {
                     wdb.TxnAbort();
                     result.insert("error_msg", "Write failed.");
-                    return result;
+                    emit extKeySetActiveResult(result);
+                    return;
                 };
             } else
             {
                 wdb.TxnAbort();
                 result.insert("error_msg", "Account not in wallet.");
-                return result;
+                emit extKeySetActiveResult(result);
+                return;
             };
         };
 
@@ -2311,20 +2428,23 @@ QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
                 {
                     wdb.TxnAbort();
                     result.insert("error_msg", "Write failed.");
-                    return result;
+                    emit extKeySetActiveResult(result);
+                    return;
                 };
             } else
             {
                 wdb.TxnAbort();
                 result.insert("error_msg", "Account not in wallet.");
-                return result;
+                emit extKeySetActiveResult(result);
+                return;
             };
         };
 
         if (!wdb.TxnCommit())
         {
             result.insert("error_msg", "TxnCommit failed.");
-            return result;
+            emit extKeySetActiveResult(result);
+            return;
         }
 
     } // cs_wallet
@@ -2332,5 +2452,6 @@ QVariantMap SpectreBridge::extKeySetActive(QString extKeyID, QString isActive)
     // If we get here all went well
     result.insert("error_msg", "");
     result.insert("result", "Success.");
-    return result;
+    emit extKeySetActiveResult(result);
+    return;
 }

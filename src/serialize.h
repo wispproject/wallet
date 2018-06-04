@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#undef NDEBUG
 #include <cassert>
 #include <limits>
 #include <stdint.h>
@@ -66,7 +67,7 @@ enum
         const bool fRead = false;               \
         unsigned int nSerSize = 0;              \
         ser_streamplaceholder s;                \
-        assert(fGetSize||fWrite||fRead); /* suppress warning */ \
+        assert(fGetSize||fWrite||fRead);        \
         s.nType = nType;                        \
         s.nVersion = nVersion;                  \
         {statements}                            \
@@ -80,7 +81,7 @@ enum
         const bool fWrite = true;               \
         const bool fRead = false;               \
         unsigned int nSerSize = 0;              \
-        assert(fGetSize||fWrite||fRead); /* suppress warning */ \
+        assert(fGetSize||fWrite||fRead);        \
         {statements}                            \
     }                                           \
     template<typename Stream>                   \
@@ -91,7 +92,7 @@ enum
         const bool fWrite = false;              \
         const bool fRead = true;                \
         unsigned int nSerSize = 0;              \
-        assert(fGetSize||fWrite||fRead); /* suppress warning */ \
+        assert(fGetSize||fWrite||fRead);        \
         {statements}                            \
     }
 
@@ -891,10 +892,23 @@ public:
         Init(nTypeIn, nVersionIn);
     }
 
+	std::vector<char> transform(const std::vector<unsigned char> & vec)
+	{
+		std::vector<char> result;
+		result.resize(vec.size());
+
+		std::transform(vec.begin(), vec.end(), result.begin(), [](unsigned char in) {return *reinterpret_cast<char*>(&in); });
+		return result;
+	}
+
+	CDataStream(const std::vector<unsigned char>& vchIn, int nTypeIn, int nVersionIn) : CDataStream(transform(vchIn), nTypeIn, nVersionIn) {};
+
+/*	//typedef std::vector<char, zero_after_free_allocator<char> > CSerializeData;
     CDataStream(const std::vector<unsigned char>& vchIn, int nTypeIn, int nVersionIn) : vch((char*)&vchIn.begin()[0], (char*)&vchIn.end()[0])
     {
         Init(nTypeIn, nVersionIn);
     }
+*/
 
     void Init(int nTypeIn, int nVersionIn)
     {

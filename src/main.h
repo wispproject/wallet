@@ -5,6 +5,10 @@
 #ifndef BITCOIN_MAIN_H
 #define BITCOIN_MAIN_H
 
+#ifdef _MSC_BUILD
+#define __PRETTY_FUNCTION__ BOOST_CURRENT_FUNCTION
+#endif
+
 #include "core.h"
 #include "bignum.h"
 #include "sync.h"
