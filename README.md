@@ -17,7 +17,7 @@ Fedora/Red Hat/CentOS:
 Arch Linux:
 * `pacman -S --needed base-devel openssl libevent libseccomp libcap boost qt5`
 
-Mac OS X (using the [Homebrew](https://brew.sh/) package manager)
+Mac OS X (using the [Homebrew](https://brew.sh/) package manager):
 ```
 brew install autoconf automake libtool pkg-config openssl@1.1 libevent boost gcc wget
 brew tap KDE-mac/homebrew-kde
@@ -31,7 +31,7 @@ git clone https://github.com/wispproject/wallet wisp
 cd wisp
 ./autogen.sh
 ./configure --enable-gui  # leave out --enable-gui to build only the console wallet
-make -j2  # use a higher number if you have many cores and memory, leave -j2 out if you are on a very low-powered system like Raspberry Pi
+make -j2  # use a higher number if you have many cores and memory, leave -j2 out on Raspberry Pi
 ```
 
 ### Running Wisp
