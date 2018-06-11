@@ -1039,15 +1039,15 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\SpectreCoin
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\SpectreCoin
-    // Mac: ~/Library/Application Support/SpectreCoin
-    // Unix: ~/.spectrecoin
-    
-    
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Wisp
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\Wisp
+    // Mac: ~/Library/Application Support/Wisp
+    // Unix: ~/.wisp
+
+
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "SpectreCoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Wisp";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -1059,10 +1059,10 @@ boost::filesystem::path GetDefaultDataDir()
         // Mac
         pathRet /= "Library/Application Support";
         fs::create_directory(pathRet);
-        return pathRet / "SpectreCoin";
+        return pathRet / "Wisp";
     #else
         // Unix
-        return pathRet / ".spectrecoin";
+        return pathRet / ".wisp";
     #endif
 #endif
 
