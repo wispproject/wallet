@@ -241,8 +241,8 @@ std::string HelpMessage()
 {
     std::string strUsage = _("Options:") + "\n";
     strUsage += "  -?                     " + _("This help message") + "\n";
-    strUsage += "  -conf=<file>           " + _("Specify configuration file (default: spectrecoin.conf)") + "\n";
-    strUsage += "  -pid=<file>            " + _("Specify pid file (default: spectrecoind.pid)") + "\n";
+    strUsage += "  -conf=<file>           " + _("Specify configuration file (default: wisp.conf)") + "\n";
+    strUsage += "  -pid=<file>            " + _("Specify pid file (default: wisp.pid)") + "\n";
     strUsage += "  -datadir=<dir>         " + _("Specify data directory") + "\n";
     strUsage += "  -wallet=<dir>          " + _("Specify wallet file (within data directory)") + "\n";
     strUsage += "  -dbcache=<n>           " + _("Set database cache size in megabytes (default: 25)") + "\n";
@@ -307,13 +307,13 @@ std::string HelpMessage()
     strUsage += "  -rpcpassword=<pw>      " + _("Password for JSON-RPC connections") + "\n";
     strUsage += "  -rpcport=<port>        " + _("Listen for JSON-RPC connections on <port> (default: 36657 or testnet: 36757)") + "\n";
     strUsage += "  -rpcallowip=<ip>       " + _("Allow JSON-RPC connections from specified IP address") + "\n";
-    
+
     if (!fHaveGUI)
     {
         strUsage += "  -rpcconnect=<ip>       " + _("Send commands to node running on <ip> (default: 127.0.0.1)") + "\n";
         strUsage += "  -rpcwait               " + _("Wait for RPC server to start") + "\n";
     };
-    
+
     strUsage += "  -blocknotify=<cmd>     " + _("Execute command when the best block changes (%s in cmd is replaced by block hash)") + "\n";
     strUsage += "  -walletnotify=<cmd>    " + _("Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)") + "\n";
     strUsage += "  -confchange            " + _("Require a confirmations for change (default: 0)") + "\n";
@@ -353,7 +353,7 @@ std::string HelpMessage()
     strUsage += "  -nosmsg                                  " + _("Disable secure messaging.") + "\n";
     strUsage += "  -debugsmsg                               " + _("Log extra debug messages.") + "\n";
     strUsage += "  -smsgscanchain                           " + _("Scan the block chain for public key addresses on startup.") + "\n";
-    
+
     return strUsage;
 }
 
