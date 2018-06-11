@@ -97,7 +97,7 @@ static std::string Translate(const char* psz)
 static void handleRunawayException(std::exception *e)
 {
     PrintExceptionContinue(e, "Runaway exception");
-    QMessageBox::critical(0, "Runaway exception", SpectreGUI::tr("A fatal error occurred. Spectre can no longer continue safely and will quit.") + QString("\n\n") + QString::fromStdString(strMiscWarning));
+    QMessageBox::critical(0, "Runaway exception", SpectreGUI::tr("A fatal error occurred. Wisp can no longer continue safely and will quit.") + QString("\n\n") + QString::fromStdString(strMiscWarning));
     exit(1);
 }
 
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     {
         // This message can not be translated, as translation is not initialized yet
         // (which not yet possible because lang=XX can be overridden in wisp.conf in the data directory)
-        QMessageBox::critical(0, "Spectre",
+        QMessageBox::critical(0, "Wisp",
                               QString("Error: Specified data directory \"%1\" does not exist.").arg(QString::fromStdString(mapArgs["-datadir"])));
         return 1;
     }
@@ -150,12 +150,12 @@ int main(int argc, char *argv[])
 
     // Application identification (must be set before OptionsModel is initialized,
     // as it is used to locate QSettings)
-    app.setOrganizationName("The Spectre Project");
-    app.setOrganizationDomain("spectre.cash");
+    app.setOrganizationName("Wisp Project");
+    app.setOrganizationDomain("wispproject.com");
     if(GetBoolArg("-testnet")) // Separate UI settings for testnet
-        app.setApplicationName("Spectre-testnet");
+        app.setApplicationName("Wisp-testnet");
     else
-        app.setApplicationName("Spectre");
+        app.setApplicationName("Wisp");
 
     // ... then GUI settings:
     OptionsModel optionsModel;
@@ -224,12 +224,12 @@ int main(int argc, char *argv[])
         // Regenerate startup link, to fix links to old versions
         if (GUIUtil::GetStartOnSystemStartup())
             GUIUtil::SetStartOnSystemStartup(true);
-        
+
         boost::thread_group threadGroup;
-        
+
         SpectreGUI window;
         guiref = &window;
-        
+
         QTimer* pollShutdownTimer = new QTimer(guiref);
         QObject::connect(pollShutdownTimer, SIGNAL(timeout()), guiref, SLOT(detectShutdown()));
         pollShutdownTimer->start(200);
@@ -239,9 +239,9 @@ int main(int argc, char *argv[])
             {
                 // Put this in a block, so that the Model objects are cleaned up before
                 // calling Shutdown().
-                
+
                 paymentServer->setOptionsModel(&optionsModel);
-                
+
                 if (splashref)
                     splash.finish(&window);
 
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
                 {
                     window.show();
                 }
-                
+
                 // Now that initialization/startup is done, process any command-line
                 // spectre: URIs
                 QObject::connect(paymentServer, SIGNAL(receivedURI(QString)), &window, SLOT(handleURI(QString)));
@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
                 guiref = 0;
             }
             // Shutdown the core and its threads, but don't exit Qt here
-            LogPrintf("SpectreCoin shutdown.\n\n");
+            LogPrintf("Wisp shutdown.\n\n");
             std::cout << "interrupt_all\n";
             threadGroup.interrupt_all();
             std::cout << "join_all\n";

@@ -174,13 +174,13 @@ SpectreGUI::SpectreGUI(QWidget *parent):
     webEnginePage->action(QWebEnginePage::Reload)->setVisible(false);
     webEnginePage->action(QWebEnginePage::Back)->setVisible(false);
     webEnginePage->action(QWebEnginePage::Forward)->setVisible(false);
-    
+
     connect(webEnginePage,SIGNAL(linkClicked(QUrl)), this, SLOT(urlClicked(const QUrl&)));
 
     setCentralWidget(webEngineView);
 
     resize(1280, 720);
-    setWindowTitle(tr("Spectre") + " - " + tr("Client"));
+    setWindowTitle(tr("Wisp Wallet for SpectreCoin"));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/spectre"));
     setWindowIcon(QIcon(":icons/spectre"));
@@ -271,7 +271,7 @@ void SpectreGUI::pageLoaded(bool ok)
 }
 
 void SpectreGUI::addJavascriptObjects()
-{        
+{
     //Following the example at https://doc.qt.io/qt-5.10/qtwebengine-webenginewidgets-markdowneditor-example.html
     QWebChannel *channel = new QWebChannel(this);
     //register a QObject to be exposed to JavaScript
@@ -304,14 +304,14 @@ void SpectreGUI::createActions()
     quitAction->setToolTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(QIcon(":/icons/spectre"), tr("&About SpectreCoin"), this);
+    aboutAction = new QAction(QIcon(":/icons/spectre"), tr("&About Wisp"), this);
     aboutAction->setToolTip(tr("Show information about SpectreCoin"));
     aboutAction->setMenuRole(QAction::AboutRole);
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About &Qt"), this);
     aboutQtAction->setToolTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setToolTip(tr("Modify configuration options for SpectreCoin"));
+    optionsAction->setToolTip(tr("Modify configuration options for Wisp"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
     toggleHideAction = new QAction(QIcon(":/icons/spectre"), tr("&Show / Hide"), this);
     encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
@@ -388,7 +388,7 @@ void SpectreGUI::setClientModel(ClientModel *clientModel)
             if (sMode.length() > 0)
                 sMode[0] = sMode[0].toUpper();
 
-            setWindowTitle(tr("Spectre") + " - " + tr("Wallet") + ", " + sMode);
+            setWindowTitle(tr("Wisp Wallet for SpectreCoin") + ", " + sMode);
         };
 
         // Replace some strings and icons, when using the testnet
@@ -463,7 +463,7 @@ void SpectreGUI::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIconMenu = new QMenu(this);
     trayIcon->setContextMenu(trayIconMenu);
-    trayIcon->setToolTip(tr("Spectre client"));
+    trayIcon->setToolTip(tr("Wisp"));
     trayIcon->setIcon(QIcon(":/icons/spectre"));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
           this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
