@@ -209,13 +209,13 @@ void ThreadSignalHandler(void *nothing)
 
 bool static InitError(const std::string &str)
 {
-    uiInterface.ThreadSafeMessageBox(str, _("SpectreCoin"), CClientUIInterface::BTN_OK | CClientUIInterface::MODAL);
+    uiInterface.ThreadSafeMessageBox(str, _("Wisp"), CClientUIInterface::BTN_OK | CClientUIInterface::MODAL);
     return false;
 }
 
 bool static InitWarning(const std::string &str)
 {
-    uiInterface.ThreadSafeMessageBox(str, _("SpectreCoin"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING | CClientUIInterface::MODAL);
+    uiInterface.ThreadSafeMessageBox(str, _("Wisp"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING | CClientUIInterface::MODAL);
     return true;
 }
 
@@ -552,7 +552,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     // ********************************************************* Step 4: application initialization: dir lock, daemonize, pidfile, debug log
     // Sanity check
     if (!InitSanityCheck())
-        return InitError(_("Initialization sanity check failed. SpectreCoin is shutting down."));
+        return InitError(_("Initialization sanity check failed. Wisp is shutting down."));
 
     std::string strDataDir = GetDataDir().string();
     std::string strWalletFileName = GetArg("-wallet", "wallet.dat");
@@ -569,13 +569,13 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
     if (!lock.try_lock())
-        return InitError(strprintf(_("Cannot obtain a lock on data directory %s.  SpectreCoin is probably already running."), strDataDir.c_str()));
-    
+        return InitError(strprintf(_("Cannot obtain a lock on data directory %s.  Wisp is probably already running."), strDataDir.c_str()));
+
     if (GetBoolArg("-shrinkdebugfile", !fDebug))
         ShrinkDebugFile();
 
     LogPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    LogPrintf("SpectreCoin version %s (%s)\n", FormatFullVersion().c_str(), CLIENT_DATE.c_str());
+    LogPrintf("Wisp version %s (%s)\n", FormatFullVersion().c_str(), CLIENT_DATE.c_str());
     LogPrintf("Operating in %s mode.\n", GetNodeModeName(nNodeMode));
     LogPrintf("Using OpenSSL version %s\n", SSLeay_version(SSLEAY_VERSION));
 
@@ -589,10 +589,10 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     if (fDaemon)
     {
-        fprintf(stdout, "SpectreCoin server starting\n");
+        fprintf(stdout, "Wisp server starting\n");
         fflush(stdout);
     };
-    
+
     int64_t nStart;
 
     /* *********************************************************
@@ -691,7 +691,7 @@ bool AppInit2(boost::thread_group& threadGroup)
                 " Original wallet.dat saved as wallet.{timestamp}.bak in %s; if"
                 " your balance or transactions are incorrect you should"
                 " restore from a backup."), strDataDir.c_str());
-            uiInterface.ThreadSafeMessageBox(msg, _("SpectreCoin"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING | CClientUIInterface::MODAL);
+            uiInterface.ThreadSafeMessageBox(msg, _("Wisp"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING | CClientUIInterface::MODAL);
         };
 
         if (r == CDBEnv::RECOVER_FAIL)
@@ -703,9 +703,9 @@ bool AppInit2(boost::thread_group& threadGroup)
     nMaxThinPeers = GetArg("-maxthinpeers", 8);
 
     nBloomFilterElements = GetArg("-bloomfilterelements", 1536);
-    
+
     // Tor implementation
-    
+
     do {
         std::set<enum Network> nets;
         nets.insert(NET_TOR);
@@ -730,7 +730,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     } else {
         addrOnion = CService("127.0.0.1", onion_port);
 }
-    
+
     SetProxy(NET_TOR, addrOnion);
     SetReachable(NET_TOR);
 
@@ -738,11 +738,11 @@ bool AppInit2(boost::thread_group& threadGroup)
     fNameLookup = GetBoolArg("-dns", true);
 
     bool fBound = false;
-    
+
     // Tor implementation
     std::string strError;
 
-    do 
+    do
     {
         CService addrBind;
         if (!Lookup("127.0.0.1", addrBind, GetListenPort(), false))
@@ -753,7 +753,7 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     if (!fBound)
         return InitError(_("Failed to listen on any port."));
-    
+
     if (!(mapArgs.count("-tor") && mapArgs["-tor"] != "0")) {
         if (!NewThread(&StartTor, NULL))
             return InitError(_("Error: could not start tor node"));
@@ -768,7 +768,7 @@ bool AppInit2(boost::thread_group& threadGroup)
                 return InitError(strprintf(_("Cannot resolve -externalip address: '%s'"), strAddr.c_str()));
             AddLocal(CService(strAddr, GetListenPort(), fNameLookup), LOCAL_MANUAL);
         }
-    } else 
+    } else
     {
         string automatic_onion;
         filesystem::path hostname_path = GetDataDir() / "tor" / "onion" / "hostname";
@@ -797,7 +797,7 @@ bool AppInit2(boost::thread_group& threadGroup)
             return false;
         };
     };
-    
+
     BOOST_FOREACH(std::string strDest, mapMultiArgs["-seednode"])
         AddOneShot(strDest);
 
@@ -822,7 +822,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     uiInterface.InitMessage(_("Loading block index..."));
     LogPrintf("Loading block index...\n");
     nStart = GetTimeMillis();
-    
+
     // -- wipe the txdb if a reindex is queued
     if (mapArgs.count("-reindex"))
     {
@@ -830,7 +830,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         CTxDB txdb("cr+");
         txdb.RecreateDB();
     };
-    
+
     switch (LoadBlockIndex())
     {
         case 1:
@@ -843,7 +843,7 @@ bool AppInit2(boost::thread_group& threadGroup)
             };
             break;
     };
-    
+
     // as LoadBlockIndex can take several minutes, it's possible the user
     // requested to kill bitcoin-qt during the last operation. If so, exit.
     // As the program has not fully started yet, Shutdown() is possibly overkill.
@@ -889,7 +889,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     uiInterface.InitMessage(_("Loading wallet..."));
     LogPrintf("Loading wallet...\n");
     nStart = GetTimeMillis();
-    
+
     pwalletMain = new CWallet(strWalletFileName);
     DBErrors nLoadWalletRet = pwalletMain->LoadWallet();
 
@@ -903,15 +903,15 @@ bool AppInit2(boost::thread_group& threadGroup)
         {
             std::string msg(_("Warning: error reading wallet.dat! All keys read correctly, but transaction data"
                          " or address book entries might be missing or incorrect."));
-            uiInterface.ThreadSafeMessageBox(msg, _("SpectreCoin"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING | CClientUIInterface::MODAL);
+            uiInterface.ThreadSafeMessageBox(msg, _("Wisp"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING | CClientUIInterface::MODAL);
         } else
         if (nLoadWalletRet == DB_TOO_NEW)
         {
-            strErrors << _("Error loading wallet.dat: Wallet requires newer version of SpectreCoin") << "\n";
+            strErrors << _("Error loading wallet.dat: Wallet requires newer version of Wisp") << "\n";
         } else
         if (nLoadWalletRet == DB_NEED_REWRITE)
         {
-            strErrors << _("Wallet needed to be rewritten: restart SpectreCoin to complete") << "\n";
+            strErrors << _("Wallet needed to be rewritten: restart Wisp to complete") << "\n";
             LogPrintf("%s", strErrors.str().c_str());
             return InitError(strErrors.str());
         } else
@@ -919,12 +919,12 @@ bool AppInit2(boost::thread_group& threadGroup)
             strErrors << _("Error loading wallet.dat") << "\n";
         };
     };
-    
+
     // --- Prepare extended keys
     pwalletMain->ExtKeyLoadMaster();
     pwalletMain->ExtKeyLoadAccounts();
     pwalletMain->ExtKeyLoadAccountPacks();
-    
+
     LogPrintf("%s", strErrors.str().c_str());
     LogPrintf(" wallet      %15dms\n", GetTimeMillis() - nStart);
 
