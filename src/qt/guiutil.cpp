@@ -160,7 +160,7 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
     // NovaCoin: check prefix
-    if(uri.scheme() != QString("spectrecoin"))
+    if(uri.scheme() != QString("wisp"))
         return false;
 
     SendCoinsRecipient rv;
@@ -208,13 +208,13 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 
 bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
 {
-    // Convert spectrecoin:// to spectrecoin:
+    // Convert wisp:// to wisp:
     //
     //    Cannot handle this later, because bitcoin:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("spectrecoin://"))
+    if(uri.startsWith("wisp://"))
     {
-        uri.replace(0, 12, "spectrecoin:");
+        uri.replace(0, 12, "wisp:");
     }
     QUrl uriInstance(uri);
     return parseBitcoinURI(uriInstance, out);
@@ -466,7 +466,7 @@ boost::filesystem::path static GetAutostartDir()
 
 boost::filesystem::path static GetAutostartFilePath()
 {
-    return GetAutostartDir() / "spectrecoin.desktop";
+    return GetAutostartDir() / "wisp.desktop";
 }
 
 bool GetStartOnSystemStartup()
@@ -514,7 +514,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
                    << "Terminal=false\n" \
                    << "Hidden=false\n" \
                    << "Categories=Application;Network;\n" \
-                   << "MimeType=x-scheme-handler/spectrecoin;\n";
+                   << "MimeType=x-scheme-handler/wisp;\n";
         optionFile.close();
     }
     return true;

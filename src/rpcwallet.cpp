@@ -345,7 +345,7 @@ Value setaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw std::runtime_error(
-            "setaccount <spectrecoinaddress> <account>\n"
+            "setaccount <wispaddress> <account>\n"
             "Sets the account associated with the given address.");
 
     CBitcoinAddress address(params[0].get_str());
@@ -375,7 +375,7 @@ Value getaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw std::runtime_error(
-            "getaccount <spectrecoinaddress>\n"
+            "getaccount <wispaddress>\n"
             "Returns the account associated with the given address.");
 
     CBitcoinAddress address(params[0].get_str());
@@ -415,8 +415,8 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 5)
         throw std::runtime_error(
-            "sendtoaddress <spectrecoinaddress> <amount> [comment] [comment-to] [narration]\n" // Exchanges use the comments internally...
-            "sendtoaddress <spectrecoinaddress> <amount> [narration]\n"
+            "sendtoaddress <wispaddress> <amount> [comment] [comment-to] [narration]\n" // Exchanges use the comments internally...
+            "sendtoaddress <wispaddress> <amount> [narration]\n"
             "<amount> is a real and is rounded to the nearest 0.000001"
             + HelpRequiringPassphrase());
 
@@ -491,7 +491,7 @@ Value signmessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw std::runtime_error(
-            "signmessage <spectrecoinaddress> <message>\n"
+            "signmessage <wispaddress> <message>\n"
             "Sign a message with the private key of an address");
 
     EnsureWalletIsUnlocked();
@@ -526,7 +526,7 @@ Value verifymessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 3)
         throw std::runtime_error(
-            "verifymessage <spectrecoinaddress> <signature> <message>\n"
+            "verifymessage <wispaddress> <signature> <message>\n"
             "Verify a signed message");
 
     std::string strAddress  = params[0].get_str();
@@ -563,8 +563,8 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw std::runtime_error(
-            "getreceivedbyaddress <spectrecoinaddress> [minconf=1]\n"
-            "Returns the total amount received by <spectrecoinaddress> in transactions with at least [minconf] confirmations.");
+            "getreceivedbyaddress <wispaddress> [minconf=1]\n"
+            "Returns the total amount received by <wispaddress> in transactions with at least [minconf] confirmations.");
 
     // Bitcoin address
     CBitcoinAddress address = CBitcoinAddress(params[0].get_str());
@@ -792,7 +792,7 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 7)
         throw std::runtime_error(
-            "sendfrom <fromaccount> <tospectrecoinaddress> <amount> [minconf=1] [comment] [comment-to] [narration] \n"
+            "sendfrom <fromaccount> <towispaddress> <amount> [minconf=1] [comment] [comment-to] [narration] \n"
             "<amount> is a real and is rounded to the nearest 0.000001"
             + HelpRequiringPassphrase());
 
@@ -1775,8 +1775,8 @@ Value validateaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw std::runtime_error(
-            "validateaddress <spectrecoinaddress>\n"
-            "Return information about <spectrecoinaddress>.");
+            "validateaddress <wispaddress>\n"
+            "Return information about <wispaddress>.");
 
     CBitcoinAddress address(params[0].get_str());
     bool isValid = address.IsValid();
@@ -1806,8 +1806,8 @@ Value validatepubkey(const Array& params, bool fHelp)
 {
     if (fHelp || !params.size() || params.size() > 2)
         throw std::runtime_error(
-            "validatepubkey <spectrecoinpubkey>\n"
-            "Return information about <spectrecoinpubkey>.");
+            "validatepubkey <wisppubkey>\n"
+            "Return information about <wisppubkey>.");
 
     std::vector<unsigned char> vchPubKey = ParseHex(params[0].get_str());
     CPubKey pubKey(vchPubKey);

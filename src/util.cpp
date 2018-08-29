@@ -1009,7 +1009,7 @@ static std::string FormatException(std::exception* pex, const char* pszThread)
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "spectrecoin";
+    const char* pszModule = "wisp";
 #endif
     if (pex)
         return strprintf(
@@ -1042,7 +1042,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Windows < Vista: C:\Documents and Settings\Username\Application Data\Wisp
     // Windows >= Vista: C:\Users\Username\AppData\Roaming\Wisp
     // Mac: ~/Library/Application Support/Wisp
-    // Unix: ~/.spectrecoin
+    // Unix: ~/.wisp
     
     
 #ifdef WIN32
@@ -1062,7 +1062,7 @@ boost::filesystem::path GetDefaultDataDir()
         return pathRet / "Wisp";
     #else
         // Unix
-        return pathRet / ".spectrecoin";
+        return pathRet / ".wisp";
     #endif
 #endif
 
@@ -1117,7 +1117,7 @@ void ClearDatadirCache()
 
 boost::filesystem::path GetConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-conf", "spectrecoin.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-conf", "wisp.conf"));
     if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir(false) / pathConfigFile;
     return pathConfigFile;
 }
@@ -1150,7 +1150,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 
 boost::filesystem::path GetPidFile()
 {
-    boost::filesystem::path pathPidFile(GetArg("-pid", "spectrecoind.pid"));
+    boost::filesystem::path pathPidFile(GetArg("-pid", "wispd.pid"));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }

@@ -36,7 +36,7 @@ script:
   - echo 'Build Daemon' && echo -en 'travis_fold:start:script.daemon\\r'
 
   - cd $TRAVIS_BUILD_DIR/src
-  - if [ "$MAKEFILE" != "" ]; then make $MAKEJOBS -f $MAKEFILE HOST="$HOST" STATIC=1 OPENSSL_INCLUDE_PATH="$DEPSDIR/include" OPENSSL_LIB_PATH="$DEPSDIR/lib" DEPSDIR="$DEPSDIR" CURDIR="$TRAVIS_BUILD_DIR/src" USE_UPNP=1 BOOST_LIB_SUFFIX="$BOOST_LIB_SUFFIX" DEBUGFLAGS= && install -s spectrecoind${OUTPUT_SUFFIX} $INDIR/; fi
+  - if [ "$MAKEFILE" != "" ]; then make $MAKEJOBS -f $MAKEFILE HOST="$HOST" STATIC=1 OPENSSL_INCLUDE_PATH="$DEPSDIR/include" OPENSSL_LIB_PATH="$DEPSDIR/lib" DEPSDIR="$DEPSDIR" CURDIR="$TRAVIS_BUILD_DIR/src" USE_UPNP=1 BOOST_LIB_SUFFIX="$BOOST_LIB_SUFFIX" DEBUGFLAGS= && install -s wispd${OUTPUT_SUFFIX} $INDIR/; fi
 
   - echo -en 'travis_fold:end:script.daemon\\r'
 
@@ -60,7 +60,7 @@ script:
   - if [ -d Umbra.app ]; then contrib/macdeploy/createdmg; mv umbra.macosx.dmg $INDIR/${BUILD}.dmg; export UPLOAD=${BUILD}.dmg; fi
 
   - cd $INDIR
-  - if [ -f umbra${OUTPUT_SUFFIX} ]; then zip $INDIR/$UPLOAD umbra${OUTPUT_SUFFIX} spectrecoind${OUTPUT_SUFFIX}; fi
+  - if [ -f umbra${OUTPUT_SUFFIX} ]; then zip $INDIR/$UPLOAD umbra${OUTPUT_SUFFIX} wispd${OUTPUT_SUFFIX}; fi
   - sha256sum $UPLOAD > $INDIR/${UPLOAD}.sha256sum.txt
 
   - echo -en 'travis_fold:end:script.package\\r'

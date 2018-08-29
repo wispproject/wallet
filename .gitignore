@@ -1,6 +1,6 @@
 src/*.exe
-src/spectrecoin
-src/spectrecoind
+src/wisp
+src/wispd
 src/test_spectre
 src/build.h
 src/.libs
@@ -13,7 +13,7 @@ src/.libs
 *.P
 *.dat
 *.autosave
-.spectrecoin
+.wisp
 #compilation and Qt preprocessor part
 *.qm
 spectre
