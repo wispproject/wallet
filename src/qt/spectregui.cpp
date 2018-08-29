@@ -182,8 +182,8 @@ SpectreGUI::SpectreGUI(QWidget *parent):
     resize(1280, 720);
     setWindowTitle(tr("Wisp") + " - " + tr("Client"));
 #ifndef Q_OS_MAC
-    qApp->setWindowIcon(QIcon(":icons/spectre"));
-    setWindowIcon(QIcon(":icons/spectre"));
+    qApp->setWindowIcon(QIcon(":icons/wisp"));
+    setWindowIcon(QIcon(":icons/wisp"));
 #else
     setUnifiedTitleAndToolBarOnMac(true);
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
@@ -304,7 +304,7 @@ void SpectreGUI::createActions()
     quitAction->setToolTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(QIcon(":/icons/spectre"), tr("&About Wisp"), this);
+    aboutAction = new QAction(QIcon(":/icons/wisp"), tr("&About Wisp"), this);
     aboutAction->setToolTip(tr("Show information about Wisp"));
     aboutAction->setMenuRole(QAction::AboutRole);
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About &Qt"), this);
@@ -313,7 +313,7 @@ void SpectreGUI::createActions()
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
     optionsAction->setToolTip(tr("Modify configuration options for Wisp"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
-    toggleHideAction = new QAction(QIcon(":/icons/spectre"), tr("&Show / Hide"), this);
+    toggleHideAction = new QAction(QIcon(":/icons/wisp"), tr("&Show / Hide"), this);
     encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setToolTip(tr("Encrypt or decrypt wallet"));
     encryptWalletAction->setCheckable(true);
@@ -396,15 +396,15 @@ void SpectreGUI::setClientModel(ClientModel *clientModel)
         {
             setWindowTitle(windowTitle() + QString(" ") + tr("[testnet]"));
 #ifndef Q_OS_MAC
-            qApp->setWindowIcon(QIcon(":icons/spectre_testnet"));
-            setWindowIcon(QIcon(":icons/spectre_testnet"));
+            qApp->setWindowIcon(QIcon(":icons/wisp_testnet"));
+            setWindowIcon(QIcon(":icons/wisp_testnet"));
 #else
-            MacDockIconHandler::instance()->setIcon(QIcon(":icons/spectre_testnet"));
+            MacDockIconHandler::instance()->setIcon(QIcon(":icons/wisp_testnet"));
 #endif
             if(trayIcon)
             {
                 trayIcon->setToolTip(tr("Wisp wallet") + QString(" ") + tr("[testnet]"));
-                trayIcon->setIcon(QIcon(":/icons/spectre_testnet"));
+                trayIcon->setIcon(QIcon(":/icons/wisp_testnet"));
                 toggleHideAction->setIcon(QIcon(":/icons/toolbar_testnet"));
             }
 
@@ -464,7 +464,7 @@ void SpectreGUI::createTrayIcon()
     trayIconMenu = new QMenu(this);
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setToolTip(tr("Wisp wallet"));
-    trayIcon->setIcon(QIcon(":/icons/spectre"));
+    trayIcon->setIcon(QIcon(":/icons/wisp"));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
           this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
     trayIcon->show();
