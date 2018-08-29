@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE Spectre Test Suite
+#define BOOST_TEST_MODULE Wisp Test Suite
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 

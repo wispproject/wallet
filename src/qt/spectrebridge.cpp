@@ -2105,7 +2105,7 @@ void SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBip44, in
         if (!eKey58.IsValid(CChainParams::EXT_SECRET_KEY)
          && !eKey58.IsValid(CChainParams::EXT_PUBLIC_KEY_BTC))
         {
-            result.insert("error_msg", "Import failed - Key must begin with Spectrecoin prefix.");
+            result.insert("error_msg", "Import failed - Key must begin with Wisp prefix.");
             emit extKeyImportResult(result);
             return;
         }

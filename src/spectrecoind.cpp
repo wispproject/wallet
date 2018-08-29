@@ -128,7 +128,7 @@ void WaitForShutdown(boost::thread_group* threadGroup)
         fShutdown = ShutdownRequested();
     };
     
-    LogPrintf("SpectreCoin shutdown.\n\n");
+    LogPrintf("Wisp shutdown.\n\n");
     
     if (threadGroup)
     {
@@ -164,7 +164,7 @@ bool AppInit(int argc, char* argv[])
         if (mapArgs.count("-?") || mapArgs.count("--help"))
         {
             // First part of help message is specific to bitcoind / RPC client
-            std::string strUsage = _("SpectreCoin version") + " " + FormatFullVersion() + "\n\n" +
+            std::string strUsage = _("Wisp version") + " " + FormatFullVersion() + "\n\n" +
                 _("Usage:") + "\n" +
                   "  spectrecoind [options]                     " + "\n" +
                   "  spectrecoind [options] <command> [params]  " + _("Send command to -server or spectrecoind") + "\n" +

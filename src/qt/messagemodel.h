@@ -63,7 +63,7 @@ struct MessageTableEntry
     }
 };
 
-/** Interface to SpectreCoin Secure Messaging from Qt view code. */
+/** Interface to Wisp Secure Messaging from Qt view code. */
 class MessageModel : public QAbstractTableModel
 {
     Q_OBJECT

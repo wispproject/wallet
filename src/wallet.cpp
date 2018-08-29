@@ -4624,7 +4624,7 @@ bool CWallet::SendSpecToAnon(CStealthAddress& sxAddress, int64_t nValue, std::st
 
     if (vNodes.empty())
     {
-        sError = _("Error: SpectreCoin is not connected!");
+        sError = _("Error: Wisp is not connected!");
         return false;
     };
 
@@ -4738,7 +4738,7 @@ bool CWallet::SendAnonToAnon(CStealthAddress& sxAddress, int64_t nValue, int nRi
 
     if (vNodes.empty())
     {
-        sError = _("Error: SpectreCoin is not connected!");
+        sError = _("Error: Wisp is not connected!");
         return false;
     };
 
@@ -4840,7 +4840,7 @@ bool CWallet::SendAnonToSpec(CStealthAddress& sxAddress, int64_t nValue, int nRi
 
     if (vNodes.empty())
     {
-        sError = _("Error: SpectreCoin is not connected!");
+        sError = _("Error: Wisp is not connected!");
         return false;
     };
 

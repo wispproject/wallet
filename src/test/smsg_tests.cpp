@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(smsg_test)
 {
     
     const std::string sTestMessage =
-        "Spectre is a STATE OF THE ART, Proof of Stake crypto currency, utilizing cutting edge technology, "
+        "Wisp is a STATE OF THE ART, Proof of Stake crypto currency, utilizing cutting edge technology, "
         "such as instant p2p encrypted messaging (SpectreChat), and anonymous dual-key stealth addresses (SpectreSend). "
         "Initial distribution was done using Proof of Work and Proof of Stake.";
     
