@@ -3,13 +3,13 @@
     <name>AboutDialog</name>
     <message>
         <location filename="../forms/aboutdialog.ui" line="+14"/>
-        <source>About SpectreCoin</source>
-        <translation>Om SpectreCoin</translation>
+        <source>About Wisp</source>
+        <translation>Om Wisp</translation>
     </message>
     <message>
         <location line="+39"/>
-        <source>&lt;b&gt;SpectreCoin&lt;/b&gt; version</source>
-        <translation>&lt;b&gt;SpectreCoin&lt;/b&gt; version</translation>
+        <source>&lt;b&gt;Wisp&lt;/b&gt; version</source>
+        <translation>&lt;b&gt;Wisp&lt;/b&gt; version</translation>
     </message>
     <message>
         <location line="+41"/>
@@ -177,8 +177,8 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="-58"/>
-        <source>SpectreCoin will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
-        <translation>SpectreCoin lukker nu for at afslutte krypteringen. Husk at en krypteret  tegnebog ikke fuldt ud beskytter dine mønter mod at blive stjålet af malware som har inficeret din computer.</translation>
+        <source>Wisp will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your coins from being stolen by malware infecting your computer.</source>
+        <translation>Wisp lukker nu for at afslutte krypteringen. Husk at en krypteret  tegnebog ikke fuldt ud beskytter dine mønter mod at blive stjålet af malware som har inficeret din computer.</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -560,8 +560,8 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     </message>
     <message>
         <location line="-5"/>
-        <source>The entered address &quot;%1&quot; is not a valid SpectreCoin address.</source>
-        <translation>Den indtastede adresse &quot;%1&quot; er ikke en gyldig SpectreCoin adresse.</translation>
+        <source>The entered address &quot;%1&quot; is not a valid Wisp address.</source>
+        <translation>Den indtastede adresse &quot;%1&quot; er ikke en gyldig Wisp adresse.</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -584,7 +584,7 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     <message>
         <location line="+0"/>
         <location line="+12"/>
-        <source>Spectre</source>
+        <source>Wisp</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -676,7 +676,7 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     <name>PaymentServer</name>
     <message>
         <location filename="../paymentserver.cpp" line="+107"/>
-        <source>Cannot start spectre: click-to-pay handler</source>
+        <source>Cannot start Wisp: click-to-pay handler</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -786,12 +786,12 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     </message>
     <message>
         <location line="-10"/>
-        <source>Spectre - Debug window</source>
+        <source>Wisp - Debug window</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+25"/>
-        <source>Spectre Core</source>
+        <source>Wisp Core</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -826,7 +826,7 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     </message>
     <message>
         <location line="+157"/>
-        <source>Show the Spectre help message to get a list with possible Spectre command-line options.</source>
+        <source>Show the Wisp help message to get a list with possible Wisp command-line options.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -965,7 +965,7 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     </message>
     <message>
         <location line="+49"/>
-        <source>Open the Spectre debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <source>Open the Wisp debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1005,7 +1005,7 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     </message>
     <message>
         <location filename="../rpcconsole.cpp" line="-197"/>
-        <source>Welcome to the Spectre Core RPC console.</source>
+        <source>Welcome to the Wisp Core RPC console.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1070,17 +1070,17 @@ Det betyder, at et gebyr på mindst %2 er påkrævet.</translation>
     </message>
     <message>
         <location line="+4"/>
-        <source>&lt;b&gt;%1&lt;/b&gt; to SPECTRE %2 (%3)</source>
+        <source>&lt;b&gt;%1&lt;/b&gt; to aWISP %2 (%3)</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+5"/>
-        <source>&lt;b&gt;%1&lt;/b&gt; SPECTRE, ring size %2 to SPECTRE %3 (%4)</source>
+        <source>&lt;b&gt;%1&lt;/b&gt; aWISP, ring size %2 to aWISP %3 (%4)</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+5"/>
-        <source>&lt;b&gt;%1&lt;/b&gt; SPECTRE, ring size %2 to XSPEC %3 (%4)</source>
+        <source>&lt;b&gt;%1&lt;/b&gt; aWISP, ring size %2 to WISP %3 (%4)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1223,7 +1223,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+5"/>
-        <source>The total exceeds your spectre balance when the %1 transaction fee is included.</source>
+        <source>The total exceeds your Wisp balance when the %1 transaction fee is included.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1392,7 +1392,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>About Spectre</source>
+        <source>About Wisp</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1637,7 +1637,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>0 active connection(s) to SpectreCoin network</source>
+        <source>0 active connection(s) to Wisp network</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1677,7 +1677,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Enter a SpectreCoin address to sign the message with (e.g. SaKYqfD8J3vw4RTnqtgk2K9B67CBaL3mhV)</source>
+        <source>Enter a Wisp address to sign the message with (e.g. SaKYqfD8J3vw4RTnqtgk2K9B67CBaL3mhV)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1697,7 +1697,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Enter a SpectreCoin address to verify the message with (e.g. SaKYqfD8J3vw4RTnqtgk2K9B67CBaL3mhV)</source>
+        <source>Enter a Wisp address to verify the message with (e.g. SaKYqfD8J3vw4RTnqtgk2K9B67CBaL3mhV)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1707,7 +1707,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Enter a SpectreCoin signature</source>
+        <source>Enter a Wisp signature</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1930,7 +1930,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     <name>SpectreGUI</name>
     <message>
         <location filename="../spectre.cpp" line="+111"/>
-        <source>A fatal error occurred. Spectre can no longer continue safely and will quit.</source>
+        <source>A fatal error occurred. Wisp can no longer continue safely and will quit.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1956,12 +1956,12 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+3"/>
-        <source>&amp;About SpectreCoin</source>
+        <source>&amp;About Wisp</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+1"/>
-        <source>Show information about SpectreCoin</source>
+        <source>Show information about Wisp</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1981,7 +1981,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Modify configuration options for SpectreCoin</source>
+        <source>Modify configuration options for Wisp</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -2083,7 +2083,7 @@ Ring size of one is not anonymous, and harms the network.</source>
     </message>
     <message numerus="yes">
         <location line="+63"/>
-        <source>%n active connection(s) to SpectreCoin network</source>
+        <source>%n active connection(s) to Wisp network</source>
         <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
@@ -2242,7 +2242,7 @@ Message: %4
     <message>
         <location line="-23"/>
         <location line="+23"/>
-        <source>URI can not be parsed! This can be caused by an invalid SpectreCoin address or malformed URI parameters.</source>
+        <source>URI can not be parsed! This can be caused by an invalid Wisp address or malformed URI parameters.</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -2380,12 +2380,12 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+2"/>
-        <source>Received spectre</source>
+        <source>Received Wisp</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location line="+2"/>
-        <source>Sent spectre</source>
+        <source>Sent Wisp</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -2721,8 +2721,8 @@ Expected time to earn reward is %3</source>
     <name>bitcoin-core</name>
     <message>
         <location filename="../bitcoinstrings.cpp" line="+33"/>
-        <source>SpectreCoin version</source>
-        <translation>SpectreCoin version</translation>
+        <source>Wisp version</source>
+        <translation>Wisp version</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2731,8 +2731,8 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Send command to -server or spectrecoind</source>
-        <translation>Send kommando til-server eller spectrecoind</translation>
+        <source>Send command to -server or wispd</source>
+        <translation>Send kommando til-server eller wispd</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2751,13 +2751,13 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+2"/>
-        <source>Specify configuration file (default: spectrecoin.conf)</source>
-        <translation>Angiv konfigurationsfil (default: spectrecoin.conf)</translation>
+        <source>Specify configuration file (default: wisp.conf)</source>
+        <translation>Angiv konfigurationsfil (default: wisp.conf)</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Specify pid file (default: spectrecoind.pid)</source>
-        <translation>Angiv pid fil (standard: spectrecoind.pid)</translation>
+        <source>Specify pid file (default: wispd.pid)</source>
+        <translation>Angiv pid fil (standard: wispd.pid)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -2906,8 +2906,8 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+61"/>
-        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong SpectreCoin will not work properly.</source>
-        <translation>Advarsel: Kontroller venligst, at computerens dato og klokkeslæt er korrekt! Hvis dit ur er forkert vil SpectreCoin ikke fungere korrekt.</translation>
+        <source>Warning: Please check that your computer&apos;s date and time are correct! If your clock is wrong Wisp will not work properly.</source>
+        <translation>Advarsel: Kontroller venligst, at computerens dato og klokkeslæt er korrekt! Hvis dit ur er forkert vil Wisp ikke fungere korrekt.</translation>
     </message>
     <message>
         <location line="-31"/>
@@ -3096,24 +3096,24 @@ Expected time to earn reward is %3</source>
         <source>%s, you must set a rpcpassword in the configuration file:
  %s
 It is recommended you use the following random password:
-rpcuser=spectrecoinrpc
+rpcuser=wisprpc
 rpcpassword=%s
 (you do not need to remember this password)
 The username and password MUST NOT be the same.
 If the file does not exist, create it with owner-readable-only file permissions.
 It is also recommended to set alertnotify so you are notified of problems;
-for example: alertnotify=echo %%s | mail -s &quot;SpectreCoin Alert&quot; admin@foo.com
+for example: alertnotify=echo %%s | mail -s &quot;Wisp Alert&quot; admin@foo.com
 </source>
         <translation>% s, skal du indstille et rpcpassword i konfigurationsfilen: 
 % s 
 Det anbefales at bruge følgende tilfældig adgangskode: 
-rpcuser = spectrecoinrpc  
+rpcuser = wisprpc
 rpcpassword =% s  
 (du behøver ikke at huske denne adgangskode)  
 Brugernavn og adgangskode må ikke være den samme.  
 Hvis filen ikke findes, skal du oprette den med filtilladelser ejer-læsbar-kun. 
 Det kan også anbefales at sætte alertnotify så du får besked om problemer; 
-for eksempel: alertnotify = echo%% s | mail-s &quot;SpectreCoin Alert&quot; admin@foo.com 
+for eksempel: alertnotify = echo%% s | mail-s &quot;Wisp Alert&quot; admin@foo.com 
 </translation>
     </message>
     <message>
@@ -3238,13 +3238,13 @@ for eksempel: alertnotify = echo%% s | mail-s &quot;SpectreCoin Alert&quot; admi
     </message>
     <message>
         <location line="+1"/>
-        <source>Cannot obtain a lock on data directory %s.  SpectreCoin is probably already running.</source>
-        <translation>Kan ikke få en lås på data mappe% s. SpectreCoin kører sikkert allerede.</translation>
+        <source>Cannot obtain a lock on data directory %s.  Wisp is probably already running.</source>
+        <translation>Kan ikke få en lås på data mappe% s. Wisp kører sikkert allerede.</translation>
     </message>
     <message>
         <location line="-98"/>
-        <source>SpectreCoin</source>
-        <translation>SpectreCoin</translation>
+        <source>Wisp</source>
+        <translation>Wisp</translation>
     </message>
     <message>
         <location line="+140"/>
@@ -3278,13 +3278,13 @@ for eksempel: alertnotify = echo%% s | mail-s &quot;SpectreCoin Alert&quot; admi
     </message>
     <message>
         <location line="+4"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of SpectreCoin</source>
-        <translation>Fejl ved indlæsning af wallet.dat: Wallet kræver en nyere version af SpectreCoin</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of Wisp</source>
+        <translation>Fejl ved indlæsning af wallet.dat: Wallet kræver en nyere version af Wisp</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Wallet needed to be rewritten: restart SpectreCoin to complete</source>
-        <translation>Det er nødvendig for wallet at blive omskrevet: Genstart SpectreCoin for fuldføre</translation>
+        <source>Wallet needed to be rewritten: restart Wisp to complete</source>
+        <translation>Det er nødvendig for wallet at blive omskrevet: Genstart Wisp for fuldføre</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -3353,8 +3353,8 @@ for eksempel: alertnotify = echo%% s | mail-s &quot;SpectreCoin Alert&quot; admi
     </message>
     <message>
         <location line="+122"/>
-        <source>Unable to bind to %s on this computer. SpectreCoin is probably already running.</source>
-        <translation>Kunne ikke binde sig til% s på denne computer. SpectreCoin kører sikkert allerede.</translation>
+        <source>Unable to bind to %s on this computer. Wisp is probably already running.</source>
+        <translation>Kunne ikke binde sig til% s på denne computer. Wisp kører sikkert allerede.</translation>
     </message>
     <message>
         <location line="-97"/>
