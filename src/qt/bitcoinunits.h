@@ -17,10 +17,10 @@ public:
      */
     enum Unit
     {
-        XSPEC,
-        mXSPEC,
-        uXSPEC,
-        sXSPEC
+        WISP,
+        mWISP,
+        uWISP,
+        sWISP
     };
 
     //! @name Static API

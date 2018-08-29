@@ -24,10 +24,10 @@ QT_END_NAMESPACE
 
 enum eTxnTypeInd
 {
-    TXT_SPEC_TO_SPEC = 0,
-    TXT_SPEC_TO_ANON,
+    TXT_WISP_TO_WISP = 0,
+    TXT_WISP_TO_ANON,
     TXT_ANON_TO_ANON,
-    TXT_ANON_TO_SPEC,
+    TXT_ANON_TO_WISP,
 };
 
 class SendCoinsRecipient
