@@ -433,7 +433,7 @@ void SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
     QStringList formatted;
     foreach(const SendCoinsRecipient &rcp, recipients)
     {
-        int inputType; // 0 XSPEC, 1 Spectre
+        int inputType; // 0 WISP, 1 Spectre
         switch(rcp.txnTypeInd)
         {
             case TXT_SPEC_TO_SPEC:
@@ -451,7 +451,7 @@ void SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
                 nAnonOutputs++;
                 break;
             case TXT_ANON_TO_SPEC:
-                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to XSPEC %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
+                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to WISP %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 1;
                 break;
             default:

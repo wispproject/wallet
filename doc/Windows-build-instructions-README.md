@@ -1,4 +1,4 @@
-Wisp Building from source for Windows (XSPEC)
+Wisp Building from source for Windows (WISP)
 ====================================================
 
 

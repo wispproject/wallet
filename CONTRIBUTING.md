@@ -1,17 +1,17 @@
-How to contribute to XSPEC
+How to contribute to WISP
 ============================
 
-The XSPEC project operates with an open contributor model where anyone is welcome to contribute towards development. This can be contributions in the form of peer reviews, testing and patches via pull requests. We will actively encourage community involvement and reward good work. This document explains the practical process and guidelines for contributing to XSPEC.
+The WISP project operates with an open contributor model where anyone is welcome to contribute towards development. This can be contributions in the form of peer reviews, testing and patches via pull requests. We will actively encourage community involvement and reward good work. This document explains the practical process and guidelines for contributing to WISP.
 
-In terms of XSPEC code governance structure, there are no privileged individuals or developers. XSPEC as most open source projects naturally revolves around meritocracy where longer term contributors gain more trust from the developer community. However, a certain hierarchy is necessary for practical purposes.
+In terms of WISP code governance structure, there are no privileged individuals or developers. WISP as most open source projects naturally revolves around meritocracy where longer term contributors gain more trust from the developer community. However, a certain hierarchy is necessary for practical purposes.
 
-Therefore, there will be repository “curators” who are responsible for merging pull requests as well as the XSPEC Core Team who are responsible for the release cycle, moderation and appointment of "curators".
+Therefore, there will be repository “curators” who are responsible for merging pull requests as well as the WISP Core Team who are responsible for the release cycle, moderation and appointment of "curators".
 
 
 Contributor Workflow
 --------------------
 
-The XSPEC codebase is maintained using the “contributor workflow” where everyone contributes patch proposals using “pull requests”. This facilitates social contribution, easy testing and peer review. There may be circumstances where the XSPEC Core Team will update the code if needed.
+The WISP codebase is maintained using the “contributor workflow” where everyone contributes patch proposals using “pull requests”. This facilitates social contribution, easy testing and peer review. There may be circumstances where the WISP Core Team will update the code if needed.
 
 To contribute a patch, the workflow is as follows:
 
@@ -69,9 +69,9 @@ Project curators aim for a quick turnaround on refactoring pull requests, so whe
 "Decision Making" Process
 -------------------------
 
-The following applies to code changes to the XSPEC Core project (and related projects such as libsecp256k1), and is not to be confused with overall XSPEC Network Protocol consensus changes.
+The following applies to code changes to the WISP Core project (and related projects such as libsecp256k1), and is not to be confused with overall WISP Network Protocol consensus changes.
 
-Whether a pull request is merged into the XSPEC Core rests with the project merge curators and ultimately the XSPEC Core Team.
+Whether a pull request is merged into the WISP Core rests with the project merge curators and ultimately the WISP Core Team.
 
 Curators will take into consideration if a patch is in line with the general principles of the project; meets the minimum standards for inclusion; and will judge the general consensus of contributors.
 
@@ -84,7 +84,7 @@ In general, all pull requests must:
   - not break the existing test suite;
   - where bugs are fixed, where possible, there should be unit tests demonstrating the bug and also proving the fix. This helps prevent regression.
 
-Patches that change XSPEC consensus rules are considerably more involved than normal because they affect the entire ecosystem and so must be preceded by extensive discussions. While each case will be different, one should be prepared to expend more time and effort than for other kinds of patches because of increased peer review and consensus building requirements.
+Patches that change WISP consensus rules are considerably more involved than normal because they affect the entire ecosystem and so must be preceded by extensive discussions. While each case will be different, one should be prepared to expend more time and effort than for other kinds of patches because of increased peer review and consensus building requirements.
 
 
 ### Peer Review
@@ -103,12 +103,12 @@ Project curators reserve the right to weigh the opinions of peer reviewers using
 
 Where a patch set affects consensus critical code, the bar will be set much higher in terms of discussion and peer review requirements, keeping in mind that mistakes could be very costly to the wider community. This includes refactoring of consensus critical code.
 
-Where a patch set proposes to change the XSPEC consensus, it must have been discussed extensively on the appropriate Discord channel, and have a generally widely perceived technical consensus of being a worthwhile change based on the judgement of the curators and the XSPEC Core Team.
+Where a patch set proposes to change the WISP consensus, it must have been discussed extensively on the appropriate Discord channel, and have a generally widely perceived technical consensus of being a worthwhile change based on the judgement of the curators and the WISP Core Team.
 
 
 Release Policy
 --------------
 
-The XSPEC Core Team is the release manager for each XSPEC Core release.
+The WISP Core Team is the release manager for each WISP Core release.
 
 This document is subject to change and will be updated.
