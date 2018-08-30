@@ -24,7 +24,7 @@
 
 #include <boost/assign/list_of.hpp>
 
-// test_spectre --log_level=all  --run_test=bip32_tests,extkey_tests
+// test_wisp --log_level=all  --run_test=bip32_tests,extkey_tests
 
 namespace ba = boost::assign;
 

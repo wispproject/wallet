@@ -221,10 +221,10 @@ BUILT_SOURCES = qt/ui_aboutdialog.h \
 		qt/locale/umbra_zh_HK.qm \
 		qt/locale/umbra_zh_TW.qm
 
-bin_PROGRAMS += spectre
+bin_PROGRAMS += wisp
 
-spectre_SOURCES = $(common_SOURCES) \
-		  qt/qrc_spectre.cpp \
+wisp_SOURCES = $(common_SOURCES) \
+		  qt/qrc_wisp.cpp \
 		  qt/moc_spectregui.cpp \
 		  qt/moc_spectrebridge.cpp \
 		  qt/moc_rpcconsole.cpp \
@@ -283,17 +283,17 @@ spectre_SOURCES = $(common_SOURCES) \
 		  qt/spectre.cpp \
 		  qt/spectrebridge.cpp
 
-spectre_LDADD = $(wispd_LDADD) $(QT5_LIBS) $(QT5WEBKIT_LIBS)
-spectre_CPPFLAGS = $(wispd_CPPFLAGS) $(QT5_CFLAGS) $(QT5WEBKIT_CFLAGS) -DQT_DISABLE_DEPRECATED_BEFORE=0
-spectre_LDFLAGS = $(wispd_LDFLAGS) $(QT5_LDFLAGS) $(QT5WEBKIT_LDFLAGS)
-spectre_LIBTOOLFLAGS = $(wispd_LIBTOOLFLAGS)
+wisp_LDADD = $(wispd_LDADD) $(QT5_LIBS) $(QT5WEBKIT_LIBS)
+wisp_CPPFLAGS = $(wispd_CPPFLAGS) $(QT5_CFLAGS) $(QT5WEBKIT_CFLAGS) -DQT_DISABLE_DEPRECATED_BEFORE=0
+wisp_LDFLAGS = $(wispd_LDFLAGS) $(QT5_LDFLAGS) $(QT5WEBKIT_LDFLAGS)
+wisp_LIBTOOLFLAGS = $(wispd_LIBTOOLFLAGS)
 
 if OS_MACOS
-  spectre_SOURCES += qt/moc_macnotificationhandler.cpp \
+  wisp_SOURCES += qt/moc_macnotificationhandler.cpp \
 		     qt/macnotificationhandler.mm \
 		     qt/moc_macdockiconhandler.cpp \
 		     qt/macdockiconhandler.mm
-  spectre_LDFLAGS += -framework Foundation -framework AppKit -framework CoreServices
+  wisp_LDFLAGS += -framework Foundation -framework AppKit -framework CoreServices
 endif
 endif
 

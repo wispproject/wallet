@@ -1,7 +1,7 @@
 src/*.exe
 src/wisp
 src/wispd
-src/test_spectre
+src/test_wisp
 src/build.h
 src/.libs
 .*.swp
@@ -16,7 +16,7 @@ src/.libs
 .wisp
 #compilation and Qt preprocessor part
 *.qm
-spectre
+wisp
 #resources cpp
 qrc_*.cpp
 #moc
@@ -51,11 +51,11 @@ ltmain.sh
 
 !db4.8/build_unix/configure
 openssl-1.1.0h
-spectre.config
-spectre.creator
-spectre.creator.user
-spectre.files
-spectre.includes
+wisp.config
+wisp.creator
+wisp.creator.user
+wisp.files
+wisp.includes
 =
 m4/libtool.m4
 m4/ltoptions.m4
@@ -66,7 +66,7 @@ Spectre.app
 boost_1_67_0/
 libevent-2.1.8-stable/
 packages64bit/
-src/spectre.pdb
+src/wisp.pdb
 *.dll
 src/x64/
 src/bin/
@@ -74,15 +74,15 @@ src/.vs/
 src/src.vcxproj
 src/src.vcxproj.user
 src/src.vcxproj.filters
-src/spectre.lib
-src/spectre.exp
+src/wisp.lib
+src/wisp.exp
 src/mocinclude.opt
 src/.qmake.stash
 src/debug/
 src/release/moc_predefs.h.cbt
 src/release/mocinclude.opt
 src/release/moc_predefs.h
-src/spectre.ilk
+src/wisp.ilk
 packages64bit.zip
 src/src.sln
 packages64bit_static/

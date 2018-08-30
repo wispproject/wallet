@@ -535,7 +535,7 @@ HelpMessageBox::HelpMessageBox(QWidget *parent) :
     header = tr("Wisp") + " " + tr("version") + " " +
         QString::fromStdString(FormatFullVersion()) + "\n\n" +
         tr("Usage:") + "\n" +
-        "  spectre [" + tr("command-line options") + "]                     " + "\n";
+        "  wisp [" + tr("command-line options") + "]                     " + "\n";
 
     coreOptions = QString::fromStdString(HelpMessage());
 

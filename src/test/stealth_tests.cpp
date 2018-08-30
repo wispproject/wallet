@@ -4,7 +4,7 @@
 
 #include "stealth.h"
 
-// test_spectre --log_level=all  --run_test=stealth_tests
+// test_wisp --log_level=all  --run_test=stealth_tests
 
 BOOST_AUTO_TEST_SUITE(stealth_tests)
 

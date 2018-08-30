@@ -5,7 +5,7 @@
 #include "smessage.h"
 #include "init.h" // for pwalletMain
 
-// test_spectre --log_level=all  --run_test=smsg_tests
+// test_wisp --log_level=all  --run_test=smsg_tests
 
 BOOST_AUTO_TEST_SUITE(smsg_tests)
 

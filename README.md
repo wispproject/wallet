@@ -36,7 +36,7 @@ make -j2  # use a higher number if you have many cores and memory, leave -j2 out
 
 ### Running Wisp
 
-`./src/spectre`
+`./src/wisp`
 
 You can also copy this binary to `/usr/local/bin` for a system-wide installation for example.
 
