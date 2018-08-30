@@ -2778,8 +2778,8 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+6"/>
-        <source>Listen for connections on &lt;port&gt; (default: 37347 or testnet: 37111)</source>
-        <translation>Sprejmi povezave na &lt;port&gt; (privzeta vrata: 37347 ali testnet: 37111) </translation>
+        <source>Listen for connections on &lt;port&gt; (default: 24106 or testnet: 24107)</source>
+        <translation>Sprejmi povezave na &lt;port&gt; (privzeta vrata: 24106 ali testnet: 24107) </translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2839,7 +2839,7 @@ Expected time to earn reward is %3</source>
     <message>
         <location line="-87"/>
         <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 36657 or testnet: 36757)</source>
-        <translation>Sprejmi povezave na &lt;port&gt; (privzeta vrata: 37347 ali testnet: 37111) </translation>
+        <translation>Sprejmi povezave na &lt;port&gt; (privzeta vrata: 24106 ali testnet: 24107) </translation>
     </message>
     <message>
         <location line="-11"/>

@@ -1628,7 +1628,7 @@ static void run_tor() {
     argv.push_back("--HiddenServiceDir");
     argv.push_back((tor_dir / "onion").string());
     argv.push_back("--HiddenServicePort");
-    argv.push_back("37347");
+    argv.push_back("24106");
 
     if (clientTransportPlugin) {
       LogPrintf("Using external obfs4proxy as ClientTransportPlugin.\nSpecify bridges in %s\n", torrc);

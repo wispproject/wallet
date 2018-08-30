@@ -2793,8 +2793,8 @@ Verwachten tijd tot beloning is %3</translation>
     </message>
     <message>
         <location line="+6"/>
-        <source>Listen for connections on &lt;port&gt; (default: 37347 or testnet: 37111)</source>
-        <translation>Luister voor verbindingen op &lt;poort&gt; (standaard: 37347 of testnet: 37111)</translation>
+        <source>Listen for connections on &lt;port&gt; (default: 24106 or testnet: 24107)</source>
+        <translation>Luister voor verbindingen op &lt;poort&gt; (standaard: 24106 of testnet: 24107)</translation>
     </message>
     <message>
         <location line="+1"/>

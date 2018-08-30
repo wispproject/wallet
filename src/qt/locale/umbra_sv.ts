@@ -2781,8 +2781,8 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+6"/>
-        <source>Listen for connections on &lt;port&gt; (default: 37347 or testnet: 37111)</source>
-        <translation>Lyssna efter anslutningar på &lt;port&gt; (standard: 37347 eller testnät: 37111)</translation>
+        <source>Listen for connections on &lt;port&gt; (default: 24106 or testnet: 24107)</source>
+        <translation>Lyssna efter anslutningar på &lt;port&gt; (standard: 24106 eller testnät: 24107)</translation>
     </message>
     <message>
         <location line="+1"/>

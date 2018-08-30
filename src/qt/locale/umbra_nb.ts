@@ -2766,7 +2766,7 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+6"/>
-        <source>Listen for connections on &lt;port&gt; (default: 37347 or testnet: 37111)</source>
+        <source>Listen for connections on &lt;port&gt; (default: 24106 or testnet: 24107)</source>
         <translation type="unfinished"/>
     </message>
     <message>

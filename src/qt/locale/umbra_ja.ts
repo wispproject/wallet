@@ -2786,8 +2786,8 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="+6"/>
-        <source>Listen for connections on &lt;port&gt; (default: 37347 or testnet: 37111)</source>
-        <translation>&lt;port&gt; で 接続をリスン (デフォルト: 37347かtestnet は 37111)</translation>
+        <source>Listen for connections on &lt;port&gt; (default: 24106 or testnet: 24107)</source>
+        <translation>&lt;port&gt; で 接続をリスン (デフォルト: 24106かtestnet は 24107)</translation>
     </message>
     <message>
         <location line="+1"/>
