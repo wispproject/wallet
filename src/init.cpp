@@ -35,7 +35,7 @@ namespace fs = boost::filesystem;
 CWallet* pwalletMain;
 CClientUIInterface uiInterface;
 
-unsigned short const onion_port = 9089;
+unsigned short const onion_port = 9088;
 
 //////////////////////////////////////////////////////////////////////////////
 //
