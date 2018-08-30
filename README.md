@@ -1,6 +1,6 @@
 # Wisp Wallet
 
-This is the repository of the "Wisp" wallet for Spectrecoin. For more info, see https://github.com/wispproject/doc/wiki
+This is the repository of the official Wisp wallet. For more info, see https://github.com/wispproject/doc/wiki
 
 ## Building
 
