@@ -433,25 +433,25 @@ void SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
     QStringList formatted;
     foreach(const SendCoinsRecipient &rcp, recipients)
     {
-        int inputType; // 0 XSPEC, 1 Spectre
+        int inputType; // 0 WISP, 1 Spectre
         switch(rcp.txnTypeInd)
         {
-            case TXT_SPEC_TO_SPEC:
-                formatted.append(tr("<b>%1</b> to %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), rcp.label.toHtmlEscaped(), rcp.address));
+            case TXT_WISP_TO_WISP:
+                formatted.append(tr("<b>%1</b> to %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::WISP, rcp.amount), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 0;
                 break;
-            case TXT_SPEC_TO_ANON:
-                formatted.append(tr("<b>%1</b> to SPECTRE %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), rcp.label.toHtmlEscaped(), rcp.address));
+            case TXT_WISP_TO_ANON:
+                formatted.append(tr("<b>%1</b> to SPECTRE %2 (%3)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::WISP, rcp.amount), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 0;
                 nAnonOutputs++;
                 break;
             case TXT_ANON_TO_ANON:
-                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to SPECTRE %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
+                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to SPECTRE %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::WISP, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 1;
                 nAnonOutputs++;
                 break;
-            case TXT_ANON_TO_SPEC:
-                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to XSPEC %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
+            case TXT_ANON_TO_WISP:
+                formatted.append(tr("<b>%1</b> SPECTRE, ring size %2 to WISP %3 (%4)").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::WISP, rcp.amount), QString::number(rcp.nRingSize), rcp.label.toHtmlEscaped(), rcp.address));
                 inputType = 1;
                 break;
             default:
@@ -572,7 +572,7 @@ void SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
         case WalletModel::AmountWithFeeExceedsBalance:
             QMessageBox::warning(window, tr("Send Coins"),
                 tr("The total exceeds your balance when the %1 transaction fee is included.").
-                arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, sendstatus.fee)),
+                arg(BitcoinUnits::formatWithUnit(BitcoinUnits::WISP, sendstatus.fee)),
                 QMessageBox::Ok, QMessageBox::Ok);
             emit sendCoinsResult(false);
             return;
@@ -626,7 +626,7 @@ void SpectreBridge::sendCoins(bool fUseCoinControl, QString sChangeAddr)
             return;
         case WalletModel::SCR_AmountWithFeeExceedsSpectreBalance:
             QMessageBox::warning(window, tr("Send Coins"),
-                tr("The total exceeds your spectre balance when the %1 transaction fee is included.").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, sendstatus.fee)),
+                tr("The total exceeds your spectre balance when the %1 transaction fee is included.").arg(BitcoinUnits::formatWithUnit(BitcoinUnits::WISP, sendstatus.fee)),
                 QMessageBox::Ok, QMessageBox::Ok);
             emit sendCoinsResult(false);
             return;
@@ -2105,7 +2105,7 @@ void SpectreBridge::extKeyImport(QString inKey, QString inLabel, bool fBip44, in
         if (!eKey58.IsValid(CChainParams::EXT_SECRET_KEY)
          && !eKey58.IsValid(CChainParams::EXT_PUBLIC_KEY_BTC))
         {
-            result.insert("error_msg", "Import failed - Key must begin with Spectrecoin prefix.");
+            result.insert("error_msg", "Import failed - Key must begin with Wisp prefix.");
             emit extKeyImportResult(result);
             return;
         }

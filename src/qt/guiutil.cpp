@@ -160,7 +160,7 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
     // NovaCoin: check prefix
-    if(uri.scheme() != QString("spectrecoin"))
+    if(uri.scheme() != QString("wisp"))
         return false;
 
     SendCoinsRecipient rv;
@@ -188,7 +188,7 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if(!BitcoinUnits::parse(BitcoinUnits::XSPEC, i->second, &rv.amount))
+                if(!BitcoinUnits::parse(BitcoinUnits::WISP, i->second, &rv.amount))
                 {
                     return false;
                 }
@@ -208,13 +208,13 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 
 bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
 {
-    // Convert spectrecoin:// to spectrecoin:
+    // Convert wisp:// to wisp:
     //
     //    Cannot handle this later, because bitcoin:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("spectrecoin://"))
+    if(uri.startsWith("wisp://"))
     {
-        uri.replace(0, 12, "spectrecoin:");
+        uri.replace(0, 12, "wisp:");
     }
     QUrl uriInstance(uri);
     return parseBitcoinURI(uriInstance, out);
@@ -384,7 +384,7 @@ bool ToolTipToRichTextFilter::eventFilter(QObject *obj, QEvent *evt)
 #ifdef WIN32
 boost::filesystem::path static StartupShortcutPath()
 {
-    return GetSpecialFolderPath(CSIDL_STARTUP) / "SpectreCoin.lnk";
+    return GetSpecialFolderPath(CSIDL_STARTUP) / "Wisp.lnk";
 }
 
 bool GetStartOnSystemStartup()
@@ -466,7 +466,7 @@ boost::filesystem::path static GetAutostartDir()
 
 boost::filesystem::path static GetAutostartFilePath()
 {
-    return GetAutostartDir() / "spectrecoin.desktop";
+    return GetAutostartDir() / "wisp.desktop";
 }
 
 bool GetStartOnSystemStartup()
@@ -508,13 +508,13 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         optionFile << "[Desktop Entry]\n" \
                    << "Version=" << FormatFullVersion() << "\n" \
                    << "Type=Application\n" \
-                   << "Name=SpectreCoin\n" \
+                   << "Name=Wisp\n" \
                    << "Exec=" << pszExePath << "%u -min\n" \
-                   << "Icon=" <<  QFileInfo(":/icons/spectre").absoluteFilePath().toStdString() << "\n" \
+                   << "Icon=" <<  QFileInfo(":/icons/wisp").absoluteFilePath().toStdString() << "\n" \
                    << "Terminal=false\n" \
                    << "Hidden=false\n" \
                    << "Categories=Application;Network;\n" \
-                   << "MimeType=x-scheme-handler/spectrecoin;\n";
+                   << "MimeType=x-scheme-handler/wisp;\n";
         optionFile.close();
     }
     return true;
@@ -532,10 +532,10 @@ bool SetStartOnSystemStartup(bool fAutoStart) { return false; }
 HelpMessageBox::HelpMessageBox(QWidget *parent) :
     QMessageBox(parent)
 {
-    header = tr("Spectre") + " " + tr("version") + " " +
+    header = tr("Wisp") + " " + tr("version") + " " +
         QString::fromStdString(FormatFullVersion()) + "\n\n" +
         tr("Usage:") + "\n" +
-        "  spectre [" + tr("command-line options") + "]                     " + "\n";
+        "  wisp [" + tr("command-line options") + "]                     " + "\n";
 
     coreOptions = QString::fromStdString(HelpMessage());
 
@@ -544,7 +544,7 @@ HelpMessageBox::HelpMessageBox(QWidget *parent) :
         "  -min                   " + tr("Start minimized") + "\n" +
         "  -splash                " + tr("Show splash screen on startup (default: 1)") + "\n";
 
-    setWindowTitle(tr("Spectre"));
+    setWindowTitle(tr("Wisp"));
     setTextFormat(Qt::PlainText);
     // setMinimumWidth is ignored for QMessageBox so put in non-breaking spaces to make it wider.
     setText(header + QString(QChar(0x2003)).repeated(50));

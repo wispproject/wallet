@@ -74,12 +74,12 @@ common_SOURCES = anonymize.cpp \
 		 state.cpp \
 		 bloom.cpp
 
-bin_PROGRAMS = spectrecoind
-spectrecoind_SOURCES = $(common_SOURCES) \
+bin_PROGRAMS = wispd
+wispd_SOURCES = $(common_SOURCES) \
 		       spectrecoind.cpp \
 		       noui.cpp
 
-spectrecoind_LDADD = ../leveldb/out-static/libmemenv.a \
+wispd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     ../leveldb/out-static/libleveldb.a \
 		     ../db4.8/build_unix/libdb_cxx.a \
 		     ../tor/src/or/libtor.a \
@@ -105,28 +105,28 @@ spectrecoind_LDADD = ../leveldb/out-static/libmemenv.a \
 		     $(BOOST_PROGRAM_OPTIONS_LIBS) \
 		     $(BOOST_THREAD_LIBS)
 
-spectrecoind_CPPFLAGS = $(AM_CPPFLAGS) $(OPENSSL_CFLAGS) $(LIBEVENT_CFLAGS) \
+wispd_CPPFLAGS = $(AM_CPPFLAGS) $(OPENSSL_CFLAGS) $(LIBEVENT_CFLAGS) \
 			$(LIBSECCOMP_CFLAGS) $(LIBCAP_CFLAGS) $(ZLIB_CFLAGS) $(ZSTD_CPPFLAGS) $(LZMA_CPPFLAGS) \
 			$(BOOST_CPPFLAGS) \
 			-I../leveldb/include -I../leveldb/helpers -I../db4.8/build_unix \
 			-D_FORTIFY_SOURCE=1 -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE \
 			-DBOOST_ASIO_ENABLE_OLD_SERVICES
-spectrecoind_CFLAGS = $(spectrecoind_CPPFLAGS) -std=c11
-spectrecoind_LDFLAGS = $(AM_LDFLAGS) $(OPENSSL_LDFLAGS) $(LIBEVENT_LDFLAGS) \
+wispd_CFLAGS = $(wispd_CPPFLAGS) -std=c11
+wispd_LDFLAGS = $(AM_LDFLAGS) $(OPENSSL_LDFLAGS) $(LIBEVENT_LDFLAGS) \
 		       $(LIBSECCOMP_LDFLAGS) $(LIBCAP_LDFLAGS) $(ZLIB_LDFLAGS) $(ZSTD_LDFLAGS) $(LZMA_LDFLAGS) \
 		       $(BOOST_SYSTEM_LDFLAGS) $(BOOST_CHRONO_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) \
 		       $(BOOST_PROGRAM_OPTIONS_LDFLAGS) $(BOOST_THREAD_LDFLAGS)
-spectrecoind_LIBTOOLFLAGS = --tag CXX
+wispd_LIBTOOLFLAGS = --tag CXX
 
 if OS_WINDOWS_CROSSCOMPILE
-spectrecoind_LDADD += -lmswsock -lshlwapi -luuid -lole32 -lgdi32
-spectrecoind_CPPFLAGS += -DWIN32 -D_WIN32
+wispd_LDADD += -lmswsock -lshlwapi -luuid -lole32 -lgdi32
+wispd_CPPFLAGS += -DWIN32 -D_WIN32
 else
 if OS_MACOS
-spectrecoind_CPPFLAGS += -DMAC_OSX
+wispd_CPPFLAGS += -DMAC_OSX
 else
-spectrecoind_LDFLAGS += -pie
-spectrecoind_LDADD += -lcap -lseccomp
+wispd_LDFLAGS += -pie
+wispd_LDADD += -lcap -lseccomp
 endif
 endif
 
@@ -221,10 +221,10 @@ BUILT_SOURCES = qt/ui_aboutdialog.h \
 		qt/locale/umbra_zh_HK.qm \
 		qt/locale/umbra_zh_TW.qm
 
-bin_PROGRAMS += spectre
+bin_PROGRAMS += wisp
 
-spectre_SOURCES = $(common_SOURCES) \
-		  qt/qrc_spectre.cpp \
+wisp_SOURCES = $(common_SOURCES) \
+		  qt/qrc_wisp.cpp \
 		  qt/moc_spectregui.cpp \
 		  qt/moc_spectrebridge.cpp \
 		  qt/moc_rpcconsole.cpp \
@@ -283,17 +283,17 @@ spectre_SOURCES = $(common_SOURCES) \
 		  qt/spectre.cpp \
 		  qt/spectrebridge.cpp
 
-spectre_LDADD = $(spectrecoind_LDADD) $(QT5_LIBS) $(QT5WEBKIT_LIBS)
-spectre_CPPFLAGS = $(spectrecoind_CPPFLAGS) $(QT5_CFLAGS) $(QT5WEBKIT_CFLAGS) -DQT_DISABLE_DEPRECATED_BEFORE=0
-spectre_LDFLAGS = $(spectrecoind_LDFLAGS) $(QT5_LDFLAGS) $(QT5WEBKIT_LDFLAGS)
-spectre_LIBTOOLFLAGS = $(spectrecoind_LIBTOOLFLAGS)
+wisp_LDADD = $(wispd_LDADD) $(QT5_LIBS) $(QT5WEBKIT_LIBS)
+wisp_CPPFLAGS = $(wispd_CPPFLAGS) $(QT5_CFLAGS) $(QT5WEBKIT_CFLAGS) -DQT_DISABLE_DEPRECATED_BEFORE=0
+wisp_LDFLAGS = $(wispd_LDFLAGS) $(QT5_LDFLAGS) $(QT5WEBKIT_LDFLAGS)
+wisp_LIBTOOLFLAGS = $(wispd_LIBTOOLFLAGS)
 
 if OS_MACOS
-  spectre_SOURCES += qt/moc_macnotificationhandler.cpp \
+  wisp_SOURCES += qt/moc_macnotificationhandler.cpp \
 		     qt/macnotificationhandler.mm \
 		     qt/moc_macdockiconhandler.cpp \
 		     qt/macdockiconhandler.mm
-  spectre_LDFLAGS += -framework Foundation -framework AppKit -framework CoreServices
+  wisp_LDFLAGS += -framework Foundation -framework AppKit -framework CoreServices
 endif
 endif
 

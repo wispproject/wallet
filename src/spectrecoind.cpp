@@ -128,7 +128,7 @@ void WaitForShutdown(boost::thread_group* threadGroup)
         fShutdown = ShutdownRequested();
     };
     
-    LogPrintf("SpectreCoin shutdown.\n\n");
+    LogPrintf("Wisp shutdown.\n\n");
     
     if (threadGroup)
     {
@@ -164,12 +164,12 @@ bool AppInit(int argc, char* argv[])
         if (mapArgs.count("-?") || mapArgs.count("--help"))
         {
             // First part of help message is specific to bitcoind / RPC client
-            std::string strUsage = _("SpectreCoin version") + " " + FormatFullVersion() + "\n\n" +
+            std::string strUsage = _("Wisp version") + " " + FormatFullVersion() + "\n\n" +
                 _("Usage:") + "\n" +
-                  "  spectrecoind [options]                     " + "\n" +
-                  "  spectrecoind [options] <command> [params]  " + _("Send command to -server or spectrecoind") + "\n" +
-                  "  spectrecoind [options] help                " + _("List commands") + "\n" +
-                  "  spectrecoind [options] help <command>      " + _("Get help for a command") + "\n";
+                  "  wispd [options]                     " + "\n" +
+                  "  wispd [options] <command> [params]  " + _("Send command to -server or wispd") + "\n" +
+                  "  wispd [options] help                " + _("List commands") + "\n" +
+                  "  wispd [options] help <command>      " + _("Get help for a command") + "\n";
 
             strUsage += "\n" + HelpMessage();
 
@@ -179,7 +179,7 @@ bool AppInit(int argc, char* argv[])
 
         // Command-line RPC
         for (int i = 1; i < argc; i++)
-            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "spectrecoin:"))
+            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "wisp:"))
                 fCommandLine = true;
 
         if (fCommandLine)
@@ -259,7 +259,7 @@ int main(int argc, char* argv[])
     bool fRet = false;
     fHaveGUI = false;
     
-    // Connect spectrecoind signal handlers
+    // Connect wispd signal handlers
     noui_connect();
     
     fRet = AppInit(argc, argv);

@@ -1009,7 +1009,7 @@ static std::string FormatException(std::exception* pex, const char* pszThread)
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "spectrecoin";
+    const char* pszModule = "wisp";
 #endif
     if (pex)
         return strprintf(
@@ -1039,15 +1039,15 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\SpectreCoin
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\SpectreCoin
-    // Mac: ~/Library/Application Support/SpectreCoin
-    // Unix: ~/.spectrecoin
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Wisp
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\Wisp
+    // Mac: ~/Library/Application Support/Wisp
+    // Unix: ~/.wisp
     
     
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "SpectreCoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Wisp";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -1059,10 +1059,10 @@ boost::filesystem::path GetDefaultDataDir()
         // Mac
         pathRet /= "Library/Application Support";
         fs::create_directory(pathRet);
-        return pathRet / "SpectreCoin";
+        return pathRet / "Wisp";
     #else
         // Unix
-        return pathRet / ".spectrecoin";
+        return pathRet / ".wisp";
     #endif
 #endif
 
@@ -1117,7 +1117,7 @@ void ClearDatadirCache()
 
 boost::filesystem::path GetConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-conf", "spectrecoin.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-conf", "wisp.conf"));
     if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir(false) / pathConfigFile;
     return pathConfigFile;
 }
@@ -1150,7 +1150,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 
 boost::filesystem::path GetPidFile()
 {
-    boost::filesystem::path pathPidFile(GetArg("-pid", "spectrecoind.pid"));
+    boost::filesystem::path pathPidFile(GetArg("-pid", "wispd.pid"));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }
@@ -1338,10 +1338,10 @@ void AddTimeData(const CNetAddr& ip, int64_t nTime)
                 if (!fMatch)
                 {
                     fDone = true;
-                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong SpectreCoin will not work properly.");
+                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong Wisp will not work properly.");
                     strMiscWarning = strMessage;
                     LogPrintf("*** %s\n", strMessage.c_str());
-                    uiInterface.ThreadSafeMessageBox(strMessage+" ", string("SpectreCoin"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING);
+                    uiInterface.ThreadSafeMessageBox(strMessage+" ", string("Wisp"), CClientUIInterface::BTN_OK | CClientUIInterface::ICON_WARNING);
                 }
             }
         }

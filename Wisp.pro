@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = spectre
+TARGET = wisp
 #find . -type d
 QT += testlib webenginewidgets webchannel
 

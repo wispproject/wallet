@@ -5,14 +5,14 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>CFBundleIconFile</key>
-	<string>spectre.icns</string>
+	<string>wisp.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleExecutable</key>
-	<string>Spectre</string>
+	<string>Wisp</string>
 	<key>CFBundleIdentifier</key>
-	<string>io.spectreproject.Spectre</string>
+	<string>com.wispproject.Wisp</string>
 </dict>
 </plist>

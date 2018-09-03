@@ -11,10 +11,10 @@ BitcoinUnits::BitcoinUnits(QObject *parent):
 QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
 {
     QList<BitcoinUnits::Unit> unitlist;
-    unitlist.append(XSPEC);
-    unitlist.append(mXSPEC);
-    unitlist.append(uXSPEC);
-    unitlist.append(sXSPEC);
+    unitlist.append(WISP);
+    unitlist.append(mWISP);
+    unitlist.append(uWISP);
+    unitlist.append(sWISP);
     return unitlist;
 }
 
@@ -22,10 +22,10 @@ bool BitcoinUnits::valid(int unit)
 {
     switch(unit)
     {
-    case XSPEC:
-    case mXSPEC:
-    case uXSPEC:
-    case sXSPEC:
+    case WISP:
+    case mWISP:
+    case uWISP:
+    case sWISP:
         return true;
     default:
         return false;
@@ -36,10 +36,10 @@ QString BitcoinUnits::name(int unit)
 {
     switch(unit)
     {
-    case XSPEC: return QString("XSPEC");
-    case mXSPEC: return QString("mXSPEC");
-    case uXSPEC: return QString::fromUtf8("μXSPEC");
-    case sXSPEC: return QString::fromUtf8("spectoshi");
+    case WISP: return QString("WISP");
+    case mWISP: return QString("mWISP");
+    case uWISP: return QString::fromUtf8("μWISP");
+    case sWISP: return QString::fromUtf8("wisposhi");
     default: return QString("???");
     }
 }
@@ -48,10 +48,10 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case XSPEC:  return QString("SpectreCoins");
-    case mXSPEC: return QString("Milli-SpectreCoins (1 / 1,000)");
-    case uXSPEC: return QString("Micro-SpectreCoins (1 / 1,000,000)");
-    case sXSPEC: return QString("spectoshi (1 / 100,000,000)");
+    case WISP:  return QString("Wisp");
+    case mWISP: return QString("Milli-Wisp (1 / 1,000)");
+    case uWISP: return QString("Micro-Wisp (1 / 1,000,000)");
+    case sWISP: return QString("wisposhi (1 / 100,000,000)");
     default:   return QString("???");
     }
 }
@@ -60,9 +60,9 @@ qint64 BitcoinUnits::factor(int unit)
 {
     switch(unit)
     {
-    case mXSPEC: return 100000;
-    case uXSPEC: return 100;
-    case sXSPEC: return 1;
+    case mWISP: return 100000;
+    case uWISP: return 100;
+    case sWISP: return 1;
     default:   return 100000000;
     }
 }
@@ -71,10 +71,10 @@ int BitcoinUnits::amountDigits(int unit)
 {
     switch(unit)
     {
-    case XSPEC: return 8; // 21,000,000 (# digits, without commas)
-    case mXSPEC: return 11; // 21,000,000,000
-    case uXSPEC: return 14; // 21,000,000,000,000
-    case sXSPEC: return 16; // 2,100,000,000,000,000
+    case WISP: return 8; // 21,000,000 (# digits, without commas)
+    case mWISP: return 11; // 21,000,000,000
+    case uWISP: return 14; // 21,000,000,000,000
+    case sWISP: return 16; // 2,100,000,000,000,000
     default: return 0;
     }
 }
@@ -83,9 +83,9 @@ int BitcoinUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case XSPEC: return 8;
-    case mXSPEC: return 5;
-    case uXSPEC: return 2;
+    case WISP: return 8;
+    case mWISP: return 5;
+    case uWISP: return 2;
     default: return 0;
     }
 }

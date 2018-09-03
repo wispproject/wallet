@@ -16,7 +16,7 @@
 
 using namespace boost::chrono;
 
-// test_spectre --log_level=all  --run_test=ringsig_tests
+// test_wisp --log_level=all  --run_test=ringsig_tests
 
 clock_t totalGenerate;
 clock_t totalVerify;

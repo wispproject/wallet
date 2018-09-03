@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = spectre
+TARGET = wisp
 CONFIG += c++14
 
 DEFINES += DEBUGGER_CONNECTED
@@ -268,4 +268,4 @@ FORMS += \
     $$PWD/qt/forms/transactiondescdialog.ui
 
 RESOURCES += \
-    ../spectre.qrc
+    ../wisp.qrc

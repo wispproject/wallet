@@ -180,10 +180,10 @@ SpectreGUI::SpectreGUI(QWidget *parent):
     setCentralWidget(webEngineView);
 
     resize(1280, 720);
-    setWindowTitle(tr("Spectre") + " - " + tr("Client"));
+    setWindowTitle(tr("Wisp") + " - " + tr("Client"));
 #ifndef Q_OS_MAC
-    qApp->setWindowIcon(QIcon(":icons/spectre"));
-    setWindowIcon(QIcon(":icons/spectre"));
+    qApp->setWindowIcon(QIcon(":icons/wisp"));
+    setWindowIcon(QIcon(":icons/wisp"));
 #else
     setUnifiedTitleAndToolBarOnMac(true);
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
@@ -218,13 +218,13 @@ SpectreGUI::SpectreGUI(QWidget *parent):
     addJavascriptObjects();
 }
 
-unsigned short const onion_port = 9089;
+unsigned short const onion_port = 9088;
 
 void SpectreGUI::loadIndex() {
 #ifdef Q_OS_WIN
-    QFile html("C:/spectre/index.html");
+    QFile html("C:/wisp/index.html");
 #else
-    QFile html("/opt/spectre/index.html");
+    QFile html("/opt/wisp/index.html");
 #endif
 
     if(html.exists())
@@ -304,16 +304,16 @@ void SpectreGUI::createActions()
     quitAction->setToolTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
-    aboutAction = new QAction(QIcon(":/icons/spectre"), tr("&About SpectreCoin"), this);
-    aboutAction->setToolTip(tr("Show information about SpectreCoin"));
+    aboutAction = new QAction(QIcon(":/icons/wisp"), tr("&About Wisp"), this);
+    aboutAction->setToolTip(tr("Show information about Wisp"));
     aboutAction->setMenuRole(QAction::AboutRole);
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About &Qt"), this);
     aboutQtAction->setToolTip(tr("Show information about Qt"));
     aboutQtAction->setMenuRole(QAction::AboutQtRole);
     optionsAction = new QAction(QIcon(":/icons/options"), tr("&Options..."), this);
-    optionsAction->setToolTip(tr("Modify configuration options for SpectreCoin"));
+    optionsAction->setToolTip(tr("Modify configuration options for Wisp"));
     optionsAction->setMenuRole(QAction::PreferencesRole);
-    toggleHideAction = new QAction(QIcon(":/icons/spectre"), tr("&Show / Hide"), this);
+    toggleHideAction = new QAction(QIcon(":/icons/wisp"), tr("&Show / Hide"), this);
     encryptWalletAction = new QAction(QIcon(":/icons/lock_closed"), tr("&Encrypt Wallet..."), this);
     encryptWalletAction->setToolTip(tr("Encrypt or decrypt wallet"));
     encryptWalletAction->setCheckable(true);
@@ -388,7 +388,7 @@ void SpectreGUI::setClientModel(ClientModel *clientModel)
             if (sMode.length() > 0)
                 sMode[0] = sMode[0].toUpper();
 
-            setWindowTitle(tr("Spectre") + " - " + tr("Wallet") + ", " + sMode);
+            setWindowTitle(tr("Wisp") + " - " + tr("Wallet") + ", " + sMode);
         };
 
         // Replace some strings and icons, when using the testnet
@@ -396,15 +396,15 @@ void SpectreGUI::setClientModel(ClientModel *clientModel)
         {
             setWindowTitle(windowTitle() + QString(" ") + tr("[testnet]"));
 #ifndef Q_OS_MAC
-            qApp->setWindowIcon(QIcon(":icons/spectre_testnet"));
-            setWindowIcon(QIcon(":icons/spectre_testnet"));
+            qApp->setWindowIcon(QIcon(":icons/wisp_testnet"));
+            setWindowIcon(QIcon(":icons/wisp_testnet"));
 #else
-            MacDockIconHandler::instance()->setIcon(QIcon(":icons/spectre_testnet"));
+            MacDockIconHandler::instance()->setIcon(QIcon(":icons/wisp_testnet"));
 #endif
             if(trayIcon)
             {
-                trayIcon->setToolTip(tr("Spectre client") + QString(" ") + tr("[testnet]"));
-                trayIcon->setIcon(QIcon(":/icons/spectre_testnet"));
+                trayIcon->setToolTip(tr("Wisp wallet") + QString(" ") + tr("[testnet]"));
+                trayIcon->setIcon(QIcon(":/icons/wisp_testnet"));
                 toggleHideAction->setIcon(QIcon(":/icons/toolbar_testnet"));
             }
 
@@ -463,8 +463,8 @@ void SpectreGUI::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIconMenu = new QMenu(this);
     trayIcon->setContextMenu(trayIconMenu);
-    trayIcon->setToolTip(tr("Spectre client"));
-    trayIcon->setIcon(QIcon(":/icons/spectre"));
+    trayIcon->setToolTip(tr("Wisp wallet"));
+    trayIcon->setIcon(QIcon(":/icons/wisp"));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
           this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
     trayIcon->show();
@@ -529,7 +529,7 @@ void SpectreGUI::setNumConnections(int count)
     QString source = "qrc:///icons/" + className.replace("-", "_");
     connectionIcon.setAttribute("src", source);
 
-    QString dataTitle = tr("%n active connection(s) to SpectreCoin network", "", count);
+    QString dataTitle = tr("%n active connection(s) to Wisp network", "", count);
     connectionIcon.setAttribute("data-title", dataTitle);
 }
 
@@ -737,7 +737,7 @@ void SpectreGUI::askFee(qint64 nFeeRequired, bool *payFee)
         tr("This transaction is over the size limit.  You can still send it for a fee of %1, "
           "which goes to the nodes that process your transaction and helps to support the network.  "
           "Do you want to pay the fee?").arg(
-                BitcoinUnits::formatWithUnit(BitcoinUnits::XSPEC, nFeeRequired));
+                BitcoinUnits::formatWithUnit(BitcoinUnits::WISP, nFeeRequired));
     QMessageBox::StandardButton retval = QMessageBox::question(
           this, tr("Confirm transaction fee"), strMessage,
           QMessageBox::Yes|QMessageBox::Cancel, QMessageBox::Yes);
@@ -846,7 +846,7 @@ void SpectreGUI::dropEvent(QDropEvent *event)
         if (nValidUrisFound)
             bridge->triggerElement("#navitems a[href=#send]", "click");
         else
-            notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid SpectreCoin address or malformed URI parameters."));
+            notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid Wisp address or malformed URI parameters."));
     }
 
     event->acceptProposedAction();
@@ -868,7 +868,7 @@ void SpectreGUI::handleURI(QString strURI)
         showNormalIfMinimized();
     }
     else
-        notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid SpectreCoin address or malformed URI parameters."));
+        notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid Wisp address or malformed URI parameters."));
 }
 
 void SpectreGUI::setEncryptionStatus(int status)

@@ -458,7 +458,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoinsAnon(const QList<SendCoinsRec
         return SendCoinsReturn(SCR_ErrorWithMsg, 0, QString::fromStdString("Block chain must be fully synced first."));
 
     if (vNodes.empty())
-        return SendCoinsReturn(SCR_ErrorWithMsg, 0, QString::fromStdString("SpectreCoin is not connected!"));
+        return SendCoinsReturn(SCR_ErrorWithMsg, 0, QString::fromStdString("Wisp is not connected!"));
 
 
     // -- verify input type and ringsize
@@ -469,12 +469,12 @@ WalletModel::SendCoinsReturn WalletModel::sendCoinsAnon(const QList<SendCoinsRec
         int inputType = 0;
         switch(rcp.txnTypeInd)
         {
-            case TXT_SPEC_TO_SPEC:
-            case TXT_SPEC_TO_ANON:
+            case TXT_WISP_TO_WISP:
+            case TXT_WISP_TO_ANON:
                 inputType = 0;
                 break;
             case TXT_ANON_TO_ANON:
-            case TXT_ANON_TO_SPEC:
+            case TXT_ANON_TO_WISP:
                 inputType = 1;
                 break;
             default:
@@ -536,8 +536,8 @@ WalletModel::SendCoinsReturn WalletModel::sendCoinsAnon(const QList<SendCoinsRec
             int64_t nValue = rcp.amount;
             std::string sNarr = rcp.narration.toStdString();
 
-            if (rcp.txnTypeInd == TXT_SPEC_TO_SPEC
-                || rcp.txnTypeInd == TXT_ANON_TO_SPEC)
+            if (rcp.txnTypeInd == TXT_WISP_TO_WISP
+                || rcp.txnTypeInd == TXT_ANON_TO_WISP)
             {
                 // -- out spec
                 std::string sError;

@@ -1,4 +1,4 @@
-SpectreCoin Building from source for Windows (XSPEC)
+Wisp Building from source for Windows (WISP)
 ====================================================
 
 
@@ -23,14 +23,14 @@ Modify visual studio and make sure all those components are picked.
 Easy (Prebuilt libs)
 --------------------
 
-Since quit many of our users found it hard to compile. Especially on Windows. We are adding an easy way and provided prebuilt package for all the libraries required to compile Spectre wallet. Go ahead and download all the libraries from the following link:
+Since quit many of our users found it hard to compile. Especially on Windows. We are adding an easy way and provided prebuilt package for all the libraries required to compile Wisp wallet. Go ahead and download all the libraries from the following link:
 
 https://drive.google.com/file/d/1uH7D3eZHJ3nA73rsNFBYgdaCLtcbKDly/view?usp=sharing
 
-Clone Spectre source. You can simply download a “Zip” from github.
+Clone Wisp source. You can simply download a “Zip” from github.
 
 
-Now unzip Prebuild Spectre libraries.zip that you just downloaded into the source root folder. Once done properly you should end up with “src”, “packages64bit” and “tor” all into one folder. Here is a screenshot of how it looks like after all the files are living together in the same folder.
+Now unzip Prebuild Wisp libraries.zip that you just downloaded into the source root folder. Once done properly you should end up with “src”, “packages64bit” and “tor” all into one folder. Here is a screenshot of how it looks like after all the files are living together in the same folder.
 
 ![alt text](https://github.com/spectrecoin/spectre/raw/master/doc/Folder%20stucture.png)
 

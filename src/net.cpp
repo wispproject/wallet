@@ -1561,7 +1561,7 @@ bool BindListenPort(const CService &addrBind, string& strError)
     {
         int nErr = WSAGetLastError();
         if (nErr == WSAEADDRINUSE)
-            strError = strprintf(_("Unable to bind to %s on this computer. SpectreCoin is probably already running."), addrBind.ToString());
+            strError = strprintf(_("Unable to bind to %s on this computer. Wisp is probably already running."), addrBind.ToString());
         else
             strError = strprintf(_("Unable to bind to %s on this computer (bind returned error %d, %s)"), addrBind.ToString(), nErr, strerror(nErr));
         LogPrintf("%s\n", strError);
@@ -1614,7 +1614,7 @@ static void run_tor() {
     argv.push_back("--Log");
     argv.push_back("notice file " + log_file.string());
     argv.push_back("--SocksPort");
-    argv.push_back("9089");
+    argv.push_back("9088");
     argv.push_back("--ignore-missing-torrc");
     argv.push_back("-f");
     std::string torrc = (tor_dir / "torrc").string();
@@ -1628,7 +1628,7 @@ static void run_tor() {
     argv.push_back("--HiddenServiceDir");
     argv.push_back((tor_dir / "onion").string());
     argv.push_back("--HiddenServicePort");
-    argv.push_back("37347");
+    argv.push_back("24106");
 
     if (clientTransportPlugin) {
       LogPrintf("Using external obfs4proxy as ClientTransportPlugin.\nSpecify bridges in %s\n", torrc);
