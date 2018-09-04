@@ -112,6 +112,7 @@ public:
     /** Get the label belonging to an address */
     Q_INVOKABLE QString getAddressLabel(QString address);
     Q_INVOKABLE void getAddressLabel_2(QString address);
+    Q_INVOKABLE void getAddressLabelToSendBalance(QString address);
     /** Create a new address or add an existing address to your Address book */
     Q_INVOKABLE void newAddress(QString addressLabel, int addressType, QString address = "", bool send = false);
     Q_INVOKABLE void newAddress_2(QString addressLabel, int addressType, QString address = "", bool send = false);
@@ -167,6 +168,7 @@ public:
     Q_INVOKABLE void extKeySetActive(QString extKeySetActive, QString isActive);
 
     Q_INVOKABLE QString translateHtmlString(QString string);
+    Q_INVOKABLE void getOptions();
 
 signals:
     void emitPaste(QString text);
@@ -209,13 +211,15 @@ signals:
 
     void getAddressLabelResult(QString result);
     void getAddressLabel_2Result(QString result);
-
+    void getAddressLabelToSendBalanceResult(QString result);
     void createGroupChatResult(QString result);
 
     void sendMessageResult(bool result);
 
     void joinGroupChatResult(QString result);
+    void getOptionResult(QVariant result);
 
+    void listAnonOutputsResult(QVariantMap result);
 
 private:
     SpectreGUI *window;
