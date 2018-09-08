@@ -2882,7 +2882,7 @@ Expected time to earn reward is %3</source>
     </message>
     <message>
         <location line="-87"/>
-        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 36657 or testnet: 36757)</source>
+        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: 24108 or testnet: 24109)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
