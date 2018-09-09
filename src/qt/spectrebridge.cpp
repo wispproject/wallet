@@ -40,6 +40,7 @@
 #include <QClipboard>
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
+#include <QJsonObject>
 
 #include <QVariantList>
 #include <QVariantMap>
@@ -390,6 +391,8 @@ void SpectreBridge::populateOptions()
     }
 
     options.insert("optLanguage", languages);
+    options.insert("Fee", ((double)options.value("Fee").toLongLong()) / 100000000 );
+    options.insert("ReserveBalance", ((double)options.value("ReserveBalance").toLongLong()) / 100000000 );
 
     info->insert("options", options);
 }
@@ -696,6 +699,7 @@ QVariantMap SpectreBridge::listAnonOutputs()
      || pwalletMain->CountOwnedAnonOutputs(mMatureOutputCounts, true)  != 0)
     {
         LogPrintf("Error: CountOwnedAnonOutputs failed.\n");
+        emit listAnonOutputsResult(anonOutputs);
         return anonOutputs;
     };
 
@@ -705,6 +709,7 @@ QVariantMap SpectreBridge::listAnonOutputs()
     if (pwalletMain->CountAnonOutputs(mSystemOutputCounts, true) != 0)
     {
         LogPrintf("Error: CountAnonOutputs failed.\n");
+        emit listAnonOutputsResult(anonOutputs);
         return anonOutputs;
     };
 
@@ -726,6 +731,7 @@ QVariantMap SpectreBridge::listAnonOutputs()
         anonOutputs.insert(QString::number(aoc->nValue), anonOutput);
     };
 
+    emit listAnonOutputsResult(anonOutputs);
     return anonOutputs;
 };
 
@@ -847,6 +853,11 @@ QString SpectreBridge::getAddressLabel(QString address)
 void SpectreBridge::getAddressLabel_2(QString address)
 {
     emit getAddressLabel_2Result(addressModel->atm->labelForAddress(address));
+}
+
+void SpectreBridge::getAddressLabelToSendBalance(QString address)
+{
+    emit getAddressLabelToSendBalanceResult(addressModel->atm->labelForAddress(address));
 }
 
 void SpectreBridge::updateAddressLabel(QString address, QString label)
@@ -1176,11 +1187,17 @@ QString SpectreBridge::translateHtmlString(QString string)
     return string;
 }
 
+void SpectreBridge::getOptions()
+{
+    emit getOptionResult(info->value("options"));
+}
+
 QJsonValue SpectreBridge::userAction(QJsonValue action)
 {
-    QJsonArray array;
-
     QString key = action.toArray().at(0).toString();
+    if (key == "") {
+        key = action.toObject().keys().at(0);
+    }
 
     if(key == "backupWallet")
         window->backupWallet();
@@ -1202,18 +1219,40 @@ QJsonValue SpectreBridge::userAction(QJsonValue action)
         window->rpcConsole->show();
     if(key == "clearRecipients")
         clearRecipients();
-    //TODO: Port this part of the code to the new json based system
-//    if(key == "optionsChanged")
-//    {
-//        OptionsModel * optionsModel(window->clientModel->getOptionsModel());
-//        QVariantMap value(it.value().toMap());
 
-//        for(int option = 0;option < optionsModel->rowCount(); option++)
-//            if(value.contains(optionsModel->optionIDName(option)))
-//                optionsModel->setData(optionsModel->index(option), value.value(optionsModel->optionIDName(option)));
+    if(key == "optionsChanged")
+    {
+        OptionsModel * optionsModel(window->clientModel->getOptionsModel());
 
-//        populateOptions();
-//    }
+        QJsonObject object = action.toObject().value("optionsChanged").toObject();
+
+        for(int option = 0;option < optionsModel->rowCount(); option++) {
+            if(object.contains(optionsModel->optionIDName(option))) {
+                if (optionsModel->optionIDName(option) == "Fee") {
+                    //smallest number is 0.00000001
+                    //convert to long before saving it
+                    QString feeAsString = object.value(optionsModel->optionIDName(option)).toString();
+                    QVariant longFee;
+                    longFee.setValue((qlonglong)(feeAsString.toDouble() * 100000000));
+                    optionsModel->setData(optionsModel->index(option), longFee);
+                } else if (optionsModel->optionIDName(option) == "ReserveBalance") {
+                    //smallest number is 0.00000001
+                    //convert to long before saving it
+                    QString reserveBalanceAsString = object.value(optionsModel->optionIDName(option)).toString();
+                    QVariant longReserveBalance;
+                    longReserveBalance.setValue((qlonglong)(reserveBalanceAsString.toDouble() * 100000000));
+                    optionsModel->setData(optionsModel->index(option), longReserveBalance);
+                } else {
+                    optionsModel->setData(optionsModel->index(option), object.value(optionsModel->optionIDName(option)).toVariant());
+                }
+            }
+        }
+
+        populateOptions();
+
+        //update options in javascript
+        getOptions();
+    }
 
     return QJsonValue();
 }
