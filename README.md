@@ -10,7 +10,7 @@ This is the repository of the official Wisp wallet. For more info, see https://g
 
 ### Debian 9 "Stretch", Ubuntu 18.04 LTS, Linux Mint 19
 
-**Note**: The wallet currently crashes on Debian due to [bug #33](https://github.com/spectrecoin/spectre/issues/33). Ubuntu and Mint work.
+**Note**: The Qt wallet currently crashes on Debian due to [bug #33](https://github.com/spectrecoin/spectre/issues/33). Ubuntu and Mint work. On Debian you can use the headless version (wispd) until the bug gets resolved.
 
 For GUI and headless, as root: 
 * `apt-get install --no-install-recommends git autoconf automake libtool pkg-config g++ lib{ssl,event,z,boost{,-{system,chrono,filesystem,program-options,thread,iostreams}},cap,seccomp}-dev make`
