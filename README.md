@@ -4,7 +4,7 @@ This is the repository of the official Wisp wallet. For more info, see https://g
 
 # Building
 
-**Note:** Please don't try to install third-party libraries on your Linux system manually. You should always use the package manager if possible. The following instructions will show you how to build Spectrecoin on your Linux system using packages from your package manager.
+**Note:** Please don't try to install third-party libraries on your Linux system manually. You should always use the package manager if possible. The following instructions will show you how to build Wisp on your Linux system using packages from your package manager.
 
 ## Dependencies
 
