@@ -1087,12 +1087,21 @@ void ThreadSocketHandler()
 
 // hidden service seeds
 static const char *strMainNetOnionSeed[][1] = {
-// project-maintained nodes
-    {"qe6swgcfktc5l3l7.onion"},
-	{"6f3czb57puvm4si3.onion"},
-	{"j5tnnelwfsop3rsa.onion"},
-
-// other stable nodes that are monitored by the project
+// project-maintained nodes: none atm
+// other stable nodes:
+    {"ifef6jh4ppeo4456.onion:37347"},
+    {"c5tzobfmp3smymse.onion:24106"},
+    {"pl2mfvsnxwoyasmy.onion:37347"},
+    {"u52hmgsgvuu6qdxt.onion:37347"},
+    {"cum4uybixlphadex.onion:37347"},
+    {"5rbflstfwtuaviu4.onion:37347"},
+    {"hsnygjtafo5yrxsk.onion:37347"},
+    {"m7llkwjbwyfykb5m.onion:37347"},
+    {"fnymq3sw7oeniaqb.onion:37347"},
+    {"bpxcmzhorez4xd4q.onion:37347"},
+    {"lovkg4jnr7klnzru.onion:37347"},
+    {"5oos46rzd42vqfjp.onion:24106"},
+    {"46nxeetfzjefklhp.onion:24106"},
     {NULL}
 };
 
@@ -1113,16 +1122,17 @@ void ThreadOnionSeed()
     printf("Loading addresses from .onion seeds\n");
 
     for (unsigned int seed_idx = 0; strOnionSeed[seed_idx][0] != NULL; seed_idx++) {
+        std::string address, port;
+        std::stringstream address_port(strOnionSeed[seed_idx][0]);
+        std::getline(address_port, address, ':');
+        std::getline(address_port, port, ':');
+
         CNetAddr parsed;
-        if (
-            !parsed.SetSpecial(
-                strOnionSeed[seed_idx][0]
-            )
-        ) {
+        if (!parsed.SetSpecial(address)) {
             throw runtime_error("ThreadOnionSeed() : invalid .onion seed");
         }
         int nOneDay = 24*3600;
-        CAddress addr = CAddress(CService(parsed, Params().GetDefaultPort()));
+        CAddress addr = CAddress(CService(parsed, std::stoi(port)));
         addr.nTime = GetTime() - 3*nOneDay - GetRand(4*nOneDay); // use a random age between 3 and 7 days old
         found++;
         addrman.Add(addr, parsed);
